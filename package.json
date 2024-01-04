@@ -14,7 +14,9 @@
   "dependencies": {
     "daisyui": "^4.5.0",
     "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "react-hot-toast": "^2.4.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
