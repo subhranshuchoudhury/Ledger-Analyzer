@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as XLSX from "xlsx";
 import toast from 'react-hot-toast';
+import { isOwnFile } from '../../../validation/valid';
 
 export default function CalculatePage() {
 
     const router = useRouter();
+    const ownSelectRef = useRef(null);
+    const otherPartySelectRef = useRef(null);
 
     const [OwnFileData, setOwnFileData] = useState<any>(null);
     const [OtherPartyData, setOtherPartyData] = useState<any>(null);
@@ -32,19 +35,37 @@ export default function CalculatePage() {
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             excelData = XLSX.utils.sheet_to_json(sheet);
-            // console.log(e);
+            console.log(excelData);
+            const isOwnFileCheck = isOwnFile(excelData);
+
+
 
             if (handleName === 'own') {
+                if (!isOwnFileCheck) {
+                    ownSelectRef.current.value = "";
+                    setOwnFileData(null);
+                    toast.error("Kindly select your own file.")
 
-                toast.success('Your file has been uploaded successfully.');
+                } else {
 
-                setOwnFileData(excelData);
+                    setOwnFileData(excelData);
+                    toast.success('Your file has been uploaded successfully.');
+                }
+
 
             } else if (handleName === 'other') {
 
-                toast.success('Other party file has been uploaded successfully.');
+                if (isOwnFileCheck) {
+                    otherPartySelectRef.current.value = "";
+                    setOtherPartyData(null);
+                    toast.error("Kindly select other party file.")
+                } else {
+                    toast.success('Other party file has been uploaded successfully.');
 
-                setOtherPartyData(excelData);
+                    setOtherPartyData(excelData);
+                }
+
+
             }
 
         };
@@ -56,7 +77,7 @@ export default function CalculatePage() {
     return (
         <React.Fragment>
             <Head>
-                <title>Menu / Calculate - The calculation page.</title>
+                <title>Home/Menu/Calculate - The calculation page.</title>
             </Head>
 
             <div className="navbar bg-base-100 mt-2">
@@ -77,13 +98,22 @@ export default function CalculatePage() {
             <div className='flex justify-evenly mt-20'>
                 <div>
                     <p className='text-white uppercase mb-3'>Select Your File <span className='text-red-500'>*</span></p>
-                    <input name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
-
+                    <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
+                    {
+                        OwnFileData && <div className='flex justify-center mt-4'>
+                            <Image className='animate-pulse shadow-2xl' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                        </div>
+                    }
                 </div>
 
                 <div>
-                    <p className='text-white uppercase mb-3'>Select Other File <span className='text-red-500'>*</span></p>
+                    <p ref={otherPartySelectRef} className='text-white uppercase mb-3'>Select Other File <span className='text-red-500'>*</span></p>
                     <input name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Other Party Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                    {
+                        OtherPartyData && <div className='flex justify-center mt-4'>
+                            <Image className='animate-pulse shadow-2xl' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                        </div>
+                    }
                 </div>
             </div>
 

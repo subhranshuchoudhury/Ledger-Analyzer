@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
-  "description": "My application description",
+  "name": "jyeshtha-motors",
+  "description": "Bill calculation application for Jyestha Motors",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Jyeshtha Motors <subhranshuchoudhury00@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
