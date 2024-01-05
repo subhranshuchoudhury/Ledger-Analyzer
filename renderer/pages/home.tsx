@@ -42,7 +42,7 @@ export default function HomePage() {
 
         {/* Middle Buttons */}
 
-        <div className='flex justify-center items-center h-screen mt-16'>
+        <div className='flex justify-center items-center h-screen'>
 
           <Link href={"/menu/calculate"}>
             <div className='flex flex-col h-56 w-56 rounded-md shadow-2xl justify-center items-center cursor-pointer hover:bg-gray-600'>

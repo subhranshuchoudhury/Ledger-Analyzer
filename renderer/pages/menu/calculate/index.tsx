@@ -80,7 +80,7 @@ export default function CalculatePage() {
                 <title>Home/Menu/Calculate - The calculation page.</title>
             </Head>
 
-            <div className="navbar bg-base-100 mt-2">
+            <div className="navbar mt-2">
 
                 <div className="flex-1">
                     <div onClick={() => router.back()} className='hover:cursor-pointer'>
