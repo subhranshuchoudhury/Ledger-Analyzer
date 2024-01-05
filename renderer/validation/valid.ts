@@ -1,8 +1,6 @@
-import { changeUniFormOwnFile } from "./uniform/uni"
-
 export const isOwnFile = (exceldata: Object) => {
 
-    changeUniFormOwnFile(exceldata);
+
 
     return isKeyFound(exceldata[0], "JYESHTHA MOTORS")
 

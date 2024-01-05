@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import * as XLSX from "xlsx";
 import toast from 'react-hot-toast';
 import { isOwnFile } from '../../../validation/valid';
+import { changeUniFormOwnFile } from '../../../validation/uniform/uni';
 
 export default function CalculatePage() {
 
@@ -17,13 +18,11 @@ export default function CalculatePage() {
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-        console.log(e.target.files[0]);
-
         const selectedFile = e.target.files?.[0];
         const handleName = e.target.name;
 
         if (!selectedFile) {
-            toast.error('Please select a file to upload.');
+            toast.error('Please select a file to upload');
             return;
         }
         let excelData: any = null;
@@ -44,12 +43,12 @@ export default function CalculatePage() {
                 if (!isOwnFileCheck) {
                     ownSelectRef.current.value = "";
                     setOwnFileData(null);
-                    toast.error("Kindly select your own file.")
+                    toast.error("Kindly select your own file")
 
                 } else {
-
+                    changeUniFormOwnFile(excelData);
                     setOwnFileData(excelData);
-                    toast.success('Your file has been uploaded successfully.');
+                    toast.success('Your file has been uploaded successfully');
                 }
 
 
@@ -58,10 +57,9 @@ export default function CalculatePage() {
                 if (isOwnFileCheck) {
                     otherPartySelectRef.current.value = "";
                     setOtherPartyData(null);
-                    toast.error("Kindly select other party file.")
+                    toast.error("Kindly select other party file")
                 } else {
-                    toast.success('Other party file has been uploaded successfully.');
-
+                    toast.success('Other party file has been uploaded successfully');
                     setOtherPartyData(excelData);
                 }
 
@@ -101,17 +99,25 @@ export default function CalculatePage() {
                     <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
                     {
                         OwnFileData && <div className='flex justify-center mt-4'>
-                            <Image className='animate-pulse shadow-2xl' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                            <Image onClick={() => {
+                                setOwnFileData(null);
+                                ownSelectRef.current.value = "";
+
+                            }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
                         </div>
                     }
                 </div>
 
                 <div>
-                    <p ref={otherPartySelectRef} className='text-white uppercase mb-3'>Select Other File <span className='text-red-500'>*</span></p>
-                    <input name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Other Party Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                    <p className='text-white uppercase mb-3'>Select Other File <span className='text-red-500'>*</span></p>
+                    <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Other Party Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
                     {
                         OtherPartyData && <div className='flex justify-center mt-4'>
-                            <Image className='animate-pulse shadow-2xl' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                            <Image onClick={() => {
+                                setOtherPartyData(null);
+                                otherPartySelectRef.current.value = "";
+
+                            }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
                         </div>
                     }
                 </div>
