@@ -8,6 +8,8 @@
         "openxmlformats",
         "otherdata",
         "owndata",
+        "Purc",
+        "Pymt",
         "spreadsheetml",
         "xslx"
     ]
