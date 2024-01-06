@@ -232,7 +232,7 @@ export default function CalculatePage() {
                                 OtherPartyData && <div onClick={() => setToggleAccordion(!ToggleAccordion)} className="collapse collapse-arrow join-item border mb-16 border-base-300">
                                     <input checked={!ToggleAccordion} readOnly type="radio" name="my-accordion-2" />
                                     <div className="collapse-title text-xl font-medium">
-                                        Start Calculation Progress 🚀
+                                        Summary of other party file 📜
                                     </div>
                                     <div className="collapse-content">
                                         <p>Coming Soon...</p>

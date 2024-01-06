@@ -4,7 +4,7 @@ export const changeUniFormOwnFile = (exceldata: any) => {
         account: parsePartyAccount(exceldata[3]),
         openingBalance: parseOpeningBalance(exceldata[4]),
         transactions: parseTransaction(exceldata),
-        closingBalance: parseOpeningBalance(exceldata[exceldata.length - 1]),
+        closingBalance: parseClosingBalance(exceldata[exceldata.length - 1]),
         totalCredit: parseTotalCredit(exceldata[exceldata.length - 2]),
         totalDebit: parseTotalDebit(exceldata[exceldata.length - 2])
     }
@@ -48,14 +48,14 @@ const excelSerialToJSDate = (serial: number): Date => {
 }
 
 const parseOpeningBalance = (openingBalanceString: string) => {
-    const amountString = openingBalanceString?.["__EMPTY_3"];
+    const amountString = openingBalanceString?.["__EMPTY_3"].replace("Opening Bal. = Rs.", "").replace("Cr", "").trim();
+    return parseFloat(amountString.replace(/,/g, ''));
 
-    const numericPart = amountString.match(/[-+]?\d{1,3}(,?\d{3})*(\.\d+)?/);
+}
+const parseClosingBalance = (closingBalance: string) => {
+    const amountString = closingBalance?.["__EMPTY_3"].replace("Closing Bal. = Rs.", "").replace("Cr", "").trim();
+    return parseFloat(amountString.replace(/,/g, ''));
 
-    // Convert the extracted numeric part to a number
-    const numericAmount = numericPart ? parseFloat(numericPart[0].replace(/,/g, '')) : NaN;
-
-    return numericAmount;
 }
 
 const parsePartyAccount = (data: Object) => {
