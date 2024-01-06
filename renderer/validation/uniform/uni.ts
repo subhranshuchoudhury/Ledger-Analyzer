@@ -31,7 +31,7 @@ type UniformDataType = {
 }
 
 
-const excelSerialToJSDate = (serial: number): Date => {
+export const excelSerialToJSDate = (serial: number): Date => {
     const millisecondsPerDay = 24 * 60 * 60 * 1000;
     const excelStartDate = new Date('1900-01-01T00:00:00Z');
 
@@ -100,13 +100,13 @@ const parseTransaction = (transaction: any) => {
     for (let index = 6; index < transaction.length - 2; index++) {
 
         let tempTransaction: Transaction = {
-            account: "INVALID_FILE",
-            balance: 0,
+            // voucherNumber: "INVALID_FILE"
+            // account: "INVALID_FILE",
+            // balance: 0,
             credit: 0,
             date: null,
             debit: 0,
             type: "INVALID_FILE",
-            voucherNumber: "INVALID_FILE"
         };
 
 
@@ -115,11 +115,11 @@ const parseTransaction = (transaction: any) => {
             tempTransaction = {
                 date: excelSerialToJSDate(transaction[index]?.["JYESHTHA MOTORS"]),
                 type: "PAYMENT",
-                voucherNumber: transaction[index].__EMPTY_1,
                 debit: transaction[index].__EMPTY_3,
                 credit: 0,
-                balance: parseBalance(transaction[index]),
-                account: transaction[index].__EMPTY_2
+                // account: transaction[index].__EMPTY_2
+                // balance: parseBalance(transaction[index]),
+                // voucherNumber: transaction[index].__EMPTY_1,
             }
 
 
@@ -128,11 +128,11 @@ const parseTransaction = (transaction: any) => {
             tempTransaction = {
                 date: excelSerialToJSDate(transaction[index]?.["JYESHTHA MOTORS"]),
                 type: "PURCHASE",
-                voucherNumber: transaction[index].__EMPTY_1,
                 debit: 0,
                 credit: transaction[index].__EMPTY_4,
-                balance: parseBalance(transaction[index]),
-                account: transaction[index].__EMPTY_2
+                // account: transaction[index].__EMPTY_2
+                // balance: parseBalance(transaction[index]),
+                // voucherNumber: transaction[index].__EMPTY_1,
             }
         } else {
             tempTransaction = null;
@@ -153,11 +153,11 @@ const parseBalance = (balance: string): number => {
 type Transaction = {
     date: Date,
     type: string,
-    voucherNumber: string,
+    // voucherNumber: string,
     debit: number,
     credit: number,
-    balance: number,
-    account: string,
+    // balance: number,
+    // account: string,
 }
 
 

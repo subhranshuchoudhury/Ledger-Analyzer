@@ -22,6 +22,7 @@ export default function CalculatePage() {
 
         const selectedFile = e.target.files?.[0];
         const handleName = e.target.name;
+        const loading = toast.loading('Please wait while we are processing your file...');
 
         if (!selectedFile) {
             toast.error('Please select a file to upload');
@@ -38,6 +39,7 @@ export default function CalculatePage() {
             excelData = XLSX.utils.sheet_to_json(sheet);
             console.log(excelData);
             const isOwnFileCheck = isOwnFile(excelData);
+            toast.dismiss(loading);
 
 
 
@@ -61,13 +63,22 @@ export default function CalculatePage() {
                     setOtherPartyData(null);
                     toast.error("Kindly select other party file")
                 } else {
-                    toast.success('Other party file has been uploaded successfully');
-                    parsePartyAccount(excelData);
-                    setOtherPartyData(excelData);
+                    const response: any = parsePartyAccount(excelData);
+                    if (response?.error) {
+                        toast.error(response?.error);
+                        otherPartySelectRef.current.value = "";
+                        setOtherPartyData(null);
+                        return;
+                    } else {
+
+                        toast.success('Other party file has been uploaded successfully');
+                        setOtherPartyData(response);
+                    }
                 }
 
 
             }
+
 
         };
 
