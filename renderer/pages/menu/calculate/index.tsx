@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import toast from 'react-hot-toast';
 import { isOwnFile } from '../../../validation/valid';
 import { changeUniFormOwnFile } from '../../../validation/uniform/uni';
+import { parsePartyAccount } from '../../../validation/uniform/other';
 
 export default function CalculatePage() {
 
@@ -61,6 +62,7 @@ export default function CalculatePage() {
                     toast.error("Kindly select other party file")
                 } else {
                     toast.success('Other party file has been uploaded successfully');
+                    parsePartyAccount(excelData);
                     setOtherPartyData(excelData);
                 }
 
@@ -102,7 +104,7 @@ export default function CalculatePage() {
                             <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
                             {
                                 OwnFileData && <div className='flex justify-center mt-4'>
-                                    <Image onClick={() => {
+                                    <img onClick={() => {
                                         setOwnFileData(null);
                                         ownSelectRef.current.value = "";
 
@@ -116,7 +118,7 @@ export default function CalculatePage() {
                             <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Other Party Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
                             {
                                 OtherPartyData && <div className='flex justify-center mt-4'>
-                                    <Image onClick={() => {
+                                    <img onClick={() => {
                                         setOtherPartyData(null);
                                         otherPartySelectRef.current.value = "";
 
