@@ -235,6 +235,19 @@ export default function CalculatePage() {
                                                     <td></td>
                                                     <td>{OwnFileData?.transactions.length}</td>
                                                 </tr>
+                                                {
+                                                    OwnFileData?.transactions?.map((transaction: any, index: number) => {
+
+                                                        return (
+                                                            <tr key={index}>
+                                                                <th>{index + 10}</th>
+                                                                <td>{new Date(transaction?.date).toDateString()}</td>
+                                                                <td></td>
+                                                                <td>{transaction?.credit ? "🟢 CREDIT: " + transaction?.credit : "🔴 DEBIT: " + transaction?.debit}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
@@ -248,7 +261,90 @@ export default function CalculatePage() {
                                         Summary of other party file 📜
                                     </div>
                                     <div className="collapse-content">
-                                        <p>Coming Soon...</p>
+                                        <table className="table mb-10">
+                                            {/* head */}
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Name</th>
+                                                    <th></th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {/* row 1 */}
+                                                <tr>
+                                                    <th>1</th>
+                                                    <td>Account</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.account.accountName}</td>
+                                                </tr>
+                                                {/* row 2 */}
+                                                {/* <tr>
+                                                    <th>2</th>
+                                                    <td>Duration</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.account.duration}</td>
+                                                </tr> */}
+                                                {/* row 3 */}
+                                                {/* <tr>
+                                                    <th>3</th>
+                                                    <td>Start Date</td>
+                                                    <td></td>
+                                                    <td>{new Date(OtherPartyData?.account?.startDate).toDateString()}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th>4</th>
+                                                    <td>End Date</td>
+                                                    <td></td>
+                                                    <td>{new Date(OtherPartyData?.account?.endDate).toDateString()}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th>5</th>
+                                                    <td>Opening Balance</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.openingBalance}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>6</th>
+                                                    <td>Closing Balance</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.closingBalance}</td>
+                                                </tr> */}
+                                                <tr>
+                                                    <th>2</th>
+                                                    <td>Total Credit</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.totalCredit}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>3</th>
+                                                    <td>Total Debit</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.totalDebit}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>4</th>
+                                                    <td>Total Transactions</td>
+                                                    <td></td>
+                                                    <td>{OtherPartyData?.transactions.length}</td>
+                                                </tr>
+                                                {
+                                                    OtherPartyData?.transactions?.map((transaction: any, index: number) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <th>{index + 5}</th>
+                                                                <td>{new Date(transaction?.date).toDateString()}</td>
+                                                                <td></td>
+                                                                <td>{transaction.credit ? "🟢 CREDIT: " + transaction.credit : "🔴 DEBIT: " + transaction.debit}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             }

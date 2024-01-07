@@ -122,6 +122,9 @@ const parseTransaction = (transaction: any) => {
                 // voucherNumber: transaction[index].__EMPTY_1,
             }
 
+            transactions.push(tempTransaction);
+
+
 
 
         } else if (transaction[index].__EMPTY === "Purc") {
@@ -134,11 +137,12 @@ const parseTransaction = (transaction: any) => {
                 // balance: parseBalance(transaction[index]),
                 // voucherNumber: transaction[index].__EMPTY_1,
             }
+            transactions.push(tempTransaction);
+
         } else {
-            tempTransaction = null;
+            tempTransaction = null; //  Probably a blank row or Invoice row
         }
 
-        transactions.push(tempTransaction);
 
 
     }
