@@ -1,3 +1,4 @@
+import { convertNeededData } from "../custom/list";
 import { excelSerialToJSDate } from "./uni";
 
 export const parsePartyAccount = (partyAccountString: Array<any>) => {
@@ -20,6 +21,8 @@ export const parsePartyAccount = (partyAccountString: Array<any>) => {
 
     } else {
 
+        const transactions = extractTransactions(partyAccountString, impExtractedData);
+        const { totalCredit, totalDebit } = calculateTotalCredit(transactions);
 
         const uniformData: UniformDataType = {
             account: {
@@ -29,13 +32,14 @@ export const parsePartyAccount = (partyAccountString: Array<any>) => {
                 duration: null,
             },
             openingBalance: 0,
-            transactions: extractTransactions(partyAccountString, impExtractedData),
-            closingBalance: 0,
-            totalCredit: 0,
-            totalDebit: 0
+            transactions: transactions,
+            closingBalance: totalDebit - totalCredit,
+            totalCredit: totalCredit,
+            totalDebit: totalDebit
         }
 
-        console.log("UNIFORM DATA: ", uniformData)
+        console.log(uniformData);
+
         return uniformData;
     }
 
@@ -123,14 +127,17 @@ function findCreditDebitIndices(array: Array<any>): importantExtractedDataType {
 function extractTransactions(exceldata: Array<any>, impData: importantExtractedDataType) {
 
     const creditIndex = impData.creditIndex;
-    const debitIndex = impData.debitIndex;
-    const dateIndex = impData.dateIndex;
+    // const debitIndex = impData.debitIndex;
+    // const dateIndex = impData.dateIndex;
     const creditKey = impData.creditKey;
     const debitKey = impData.debitKey;
     const dateKey = impData.dateKey;
 
 
     const transactions: Transaction[] = [];
+
+    // conversion check
+    const dateConvertNeeded = doesConvertNeeded(dateKey, "date").isNeeded;
 
     for (let index = creditIndex + 1; index < exceldata.length; index++) {
         const tempObj = exceldata[index];
@@ -155,8 +162,11 @@ function extractTransactions(exceldata: Array<any>, impData: importantExtractedD
                     tempObj[debitKey] = 0;
                 }
             }
+
+
             const tempTransaction: Transaction = {
-                date: excelSerialToJSDate(tempObj[dateKey]),
+                // date: excelSerialToJSDate(tempObj[dateKey]),
+                date: dateConvertNeeded ? doesConvertNeeded(dateKey, "date").function(tempObj[dateKey]) : excelSerialToJSDate(tempObj[dateKey]),
                 type: tempObj[creditKey] === 0 ? "PAYMENT" : "PURCHASE",
                 debit: tempObj[debitKey],
                 credit: tempObj[creditKey],
@@ -170,5 +180,42 @@ function extractTransactions(exceldata: Array<any>, impData: importantExtractedD
 
     return transactions;
 
+}
+
+function calculateTotalCredit(transactions: Array<any>): { totalCredit: number, totalDebit: number } {
+    let totalCredit = 0;
+    let totalDebit = 0;
+    transactions.forEach(transaction => {
+        totalCredit += transaction?.credit;
+        totalDebit += transaction?.debit;
+    });
+
+    console.log(totalCredit, totalDebit);
+
+    return {
+        totalCredit,
+        totalDebit
+    };
+}
+
+const doesConvertNeeded = (companyName: string, keyName: string): { isNeeded: boolean, function: Function } => {
+
+
+
+    let obj = {
+        isNeeded: false,
+        function: null
+    };
+
+    convertNeededData.forEach(data => {
+
+
+        if (data.companyName.toUpperCase().trim().replace(/\s/g, "") === companyName.toUpperCase().trim().replace(/\s/g, "") && data.keyName.toUpperCase().trim().replace(/\s/g, "") === keyName.toUpperCase().trim().replace(/\s/g, "")) {
+            obj.isNeeded = true;
+            obj.function = data.function;
+        }
+    })
+
+    return obj;
 }
 
