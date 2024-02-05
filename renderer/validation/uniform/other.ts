@@ -37,50 +37,10 @@ export const parsePartyAccount = (partyAccountString: Array<any>) => {
             totalCredit: totalCredit,
             totalDebit: totalDebit
         }
-
         console.log(uniformData);
-
         return uniformData;
     }
-
-
-
 }
-
-type importantExtractedDataType = {
-    creditIndex: number,
-    debitIndex: number,
-    dateIndex: number,
-    creditKey: string,
-    debitKey: string,
-    dateKey: string
-
-}
-
-type UniformDataType = {
-    account: {
-        accountName: string,
-        startDate: Date,
-        endDate: Date,
-        duration: string
-    },
-    openingBalance: number,
-    transactions: Transaction[],
-    closingBalance: number,
-    totalCredit: number,
-    totalDebit: number
-}
-
-type Transaction = {
-    date: Date,
-    type: string,
-    debit: number,
-    credit: number,
-    // balance: number,
-    // account: string,
-    // voucherNumber: string,
-}
-
 
 function findCreditDebitIndices(array: Array<any>): importantExtractedDataType {
     let creditIndex = -1;
@@ -217,5 +177,42 @@ const doesConvertNeeded = (companyName: string, keyName: string): { isNeeded: bo
     })
 
     return obj;
+}
+
+
+// TYPES
+
+type importantExtractedDataType = {
+    creditIndex: number,
+    debitIndex: number,
+    dateIndex: number,
+    creditKey: string,
+    debitKey: string,
+    dateKey: string
+
+}
+
+type UniformDataType = {
+    account: {
+        accountName: string,
+        startDate: Date,
+        endDate: Date,
+        duration: string
+    },
+    openingBalance: number,
+    transactions: Transaction[],
+    closingBalance: number,
+    totalCredit: number,
+    totalDebit: number
+}
+
+type Transaction = {
+    date: Date,
+    type: string,
+    debit: number,
+    credit: number,
+    // balance: number,
+    // account: string,
+    // voucherNumber: string,
 }
 

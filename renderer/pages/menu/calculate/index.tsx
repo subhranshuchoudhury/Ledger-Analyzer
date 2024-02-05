@@ -51,7 +51,7 @@ export default function CalculatePage() {
 
                 } else {
 
-                    setOwnFileData(changeUniFormOwnFile(excelData));
+                    setOwnFileData(changeUniFormOwnFile(excelData));  // uni.ts
                     toast.success('Your file has been uploaded successfully');
                 }
 
@@ -70,7 +70,6 @@ export default function CalculatePage() {
                         setOtherPartyData(null);
                         return;
                     } else {
-
                         toast.success('Other party file has been uploaded successfully');
                         setOtherPartyData(response);
                     }

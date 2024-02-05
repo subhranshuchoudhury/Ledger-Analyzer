@@ -16,21 +16,6 @@ export const changeUniFormOwnFile = (exceldata: any) => {
 
 }
 
-type UniformDataType = {
-    account: {
-        accountName: string,
-        startDate: Date,
-        endDate: Date,
-        duration: string
-    },
-    openingBalance: number,
-    transactions: Transaction[],
-    closingBalance: number,
-    totalCredit: number,
-    totalDebit: number
-}
-
-
 export const excelSerialToJSDate = (serial: number): Date => {
     const millisecondsPerDay = 24 * 60 * 60 * 1000;
     const excelStartDate = new Date('1900-01-01T00:00:00Z');
@@ -154,6 +139,10 @@ const parseBalance = (balance: string): number => {
     return parseFloat(balance?.["__EMPTY_5"].replace(/[^\d.-]/g, ''));
 }
 
+
+// TYPES 
+
+
 type Transaction = {
     date: Date,
     type: string,
@@ -162,6 +151,20 @@ type Transaction = {
     credit: number,
     // balance: number,
     // account: string,
+}
+
+type UniformDataType = {
+    account: {
+        accountName: string,
+        startDate: Date,
+        endDate: Date,
+        duration: string
+    },
+    openingBalance: number,
+    transactions: Transaction[],
+    closingBalance: number,
+    totalCredit: number,
+    totalDebit: number
 }
 
 
