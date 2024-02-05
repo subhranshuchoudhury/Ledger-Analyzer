@@ -53,6 +53,15 @@ export default function HomePage() {
             </div>
           </Link>
 
+          <Link href={"/menu/ai"}>
+            <div className='flex flex-col h-56 w-56 rounded-md shadow-2xl justify-center items-center cursor-pointer hover:bg-gray-600'>
+              <div className='bg-green-500 hover:bg-red-500 justify-center flex items-center h-32 w-52 rounded-md p-10'>
+                <Image width={90} height={90} alt="Jm Logo" src="/images/calculate-budget.png" />
+              </div>
+              <p className='flex justify-center items-end mt-5 uppercase font-bold text-white'>Calculate</p>
+            </div>
+          </Link>
+
         </div>
 
       </main>
