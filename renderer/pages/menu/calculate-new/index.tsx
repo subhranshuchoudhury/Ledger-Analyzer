@@ -6,7 +6,6 @@ import * as XLSX from "xlsx";
 import toast from 'react-hot-toast';
 import { isOwnFile } from '../../../validation/valid';
 import { changeUniFormOwnFile } from '../../../validation/uniform/uni';
-import { parsePartyAccount } from '../../../validation/uniform/other';
 import ledgerRouterSelector from '../../../validation-new/TRAFFIC';
 
 export default function CalculatePage() {
@@ -62,23 +61,23 @@ export default function CalculatePage() {
                 if (isOwnFileCheck) {
                     otherPartySelectRef.current.value = "";
                     setOtherPartyData(null);
-                    toast.error("Kindly select other party file")
+                    toast.error("Kindly select Creditors Ledger file")
                 } else {
-                    // const response: any = parsePartyAccount(excelData);
-                    // if (response?.error) {
-                    //     toast.error(response?.error);
-                    //     otherPartySelectRef.current.value = "";
-                    //     setOtherPartyData(null);
-                    //     return;
-                    // } else {
-                    //     toast.success('Other party file has been uploaded successfully');
-                    //     setOtherPartyData(response);
-                    // }
-
-                    ledgerRouterSelector("TEST", "HELLO").then((response: any) => {
-                        console.log(response);
+                    ledgerRouterSelector("TOPSEL", excelData).then((response: any) => {
+                        if (response?.error) {
+                            toast.error(response?.error);
+                            otherPartySelectRef.current.value = "";
+                            setOtherPartyData(null);
+                            return;
+                        } else {
+                            toast.success('Creditors Ledger file has been uploaded successfully');
+                            setOtherPartyData(response);
+                        }
                     }).catch((error: any) => {
-                        console.log(error);
+                        toast.error(error.error);
+                        otherPartySelectRef.current.value = "";
+                        setOtherPartyData(null);
+                        return;
                     });
                 }
 
@@ -132,7 +131,7 @@ export default function CalculatePage() {
 
                         <div>
                             <p className='text-white uppercase mb-3'>Select Other File <span className='text-red-500'>*</span></p>
-                            <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Other Party Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                            <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
                             {
                                 OtherPartyData && <div className='flex justify-center mt-4'>
                                     <img onClick={() => {
@@ -159,6 +158,7 @@ export default function CalculatePage() {
                                             setOtherPartyData(null);
                                             ownSelectRef.current.value = "";
                                             otherPartySelectRef.current.value = "";
+
                                         }} className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/retry.png"} />
                                         <Image className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/play.png"} />
                                     </div>
@@ -264,7 +264,7 @@ export default function CalculatePage() {
                                 OtherPartyData && <div onClick={() => setToggleAccordion(!ToggleAccordion)} className="collapse collapse-arrow join-item border mb-16 border-base-300">
                                     <input checked={!ToggleAccordion} readOnly type="radio" name="my-accordion-2" />
                                     <div className="collapse-title text-xl font-medium">
-                                        Summary of other party file 📜
+                                        Summary of Creditors Ledger file 📜
                                     </div>
                                     <div className="collapse-content">
                                         <table className="table mb-10">
