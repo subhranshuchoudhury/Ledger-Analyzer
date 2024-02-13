@@ -108,4 +108,71 @@ const compareCreditDebitCounts = async (ledgerOne, ledgerTwo) => {
     return mismatchReport.length === 0 ? undefined : mismatchReport;
 };
 
-export { compareCreditDebitCounts };
+const compareCreditDebitCountsReverse = async (ledgerOne, ledgerTwo) => {
+    const debitCountLedgerTwo = countPositiveDebitOccurrences(ledgerTwo);
+    const creditCountLedgerOne = countPositiveCreditOccurrences(ledgerOne);
+
+    const mismatchReport = [];
+
+    for (const [debitAmount, { count: debitCount, indexes: debitIndexes }] of debitCountLedgerTwo) {
+        if (creditCountLedgerOne.has(debitAmount)) {
+            const { count: creditCount, indexes: creditIndexes } = creditCountLedgerOne.get(debitAmount);
+            if (debitCount !== creditCount) {
+                mismatchReport.push({
+                    amount: debitAmount,
+                    debitCount: debitCount,
+                    creditCount: creditCount,
+                    indexes: {
+                        ledgerOne: creditIndexes,
+                        ledgerTwo: debitIndexes,
+                    },
+                    reportString: `Debit amount of "${debitAmount}" has ${debitCount} occurrence(s) in Creditor's Ledger File and ${creditCount} occurrence(s) in Your Ledger File.`,
+                });
+            }
+        } else {
+            mismatchReport.push({
+                amount: debitAmount,
+                debitCount: debitCount,
+                creditCount: 0,
+                indexes: {
+                    ledgerOne: [],
+                    ledgerTwo: debitIndexes,
+                },
+                reportString: `Debit amount of "${debitAmount}" has ${debitCount} occurrence(s) in Creditor's Ledger File and 0 occurrence(s) in Your Ledger File.`,
+            });
+        }
+    }
+
+    for (const [creditAmount, { count: creditCount, indexes: creditIndexes }] of creditCountLedgerOne) {
+        if (debitCountLedgerTwo.has(creditAmount)) {
+            const { count: debitCount, indexes: debitIndexes } = debitCountLedgerTwo.get(creditAmount);
+            if (creditCount !== debitCount) {
+                mismatchReport.push({
+                    amount: creditAmount,
+                    debitCount: debitCount,
+                    creditCount: creditCount,
+                    indexes: {
+                        ledgerOne: creditIndexes,
+                        ledgerTwo: debitIndexes,
+                    },
+                    reportString: `Credit amount of "${creditAmount}" has ${creditCount} occurrence(s) in Your Ledger File and ${debitCount} occurrence(s) in Creditor's Ledger File.`,
+                });
+            }
+        } else {
+            mismatchReport.push({
+                amount: creditAmount,
+                debitCount: 0,
+                creditCount: creditCount,
+                indexes: {
+                    ledgerOne: creditIndexes,
+                    ledgerTwo: [],
+                },
+                reportString: `Credit amount of "${creditAmount}" has ${creditCount} occurrence(s) in Your Ledger File and 0 occurrence(s) in Creditor's Ledger File.`,
+            });
+        }
+    }
+
+    return mismatchReport.length === 0 ? undefined : mismatchReport;
+}
+
+export { compareCreditDebitCounts, compareCreditDebitCountsReverse };

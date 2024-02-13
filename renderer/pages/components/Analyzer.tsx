@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { compareCreditDebitCounts } from '../../validation-new/analyze'
+import { compareCreditDebitCounts, compareCreditDebitCountsReverse } from '../../validation-new/analyze'
 export default function Analyzer(props: any) {
     const { ownLedger, creditorsLedger, toggleViewer } = props;
 
     const [MismatchData, setMismatchData] = useState([])
+    const [MismatchDataTwo, setMismatchDataTwo] = useState([])
+    const [IsPass, setIsPass] = useState(false)
 
     console.log("Analyzer", ownLedger, creditorsLedger, toggleViewer);
 
@@ -11,25 +13,56 @@ export default function Analyzer(props: any) {
         compareCreditDebitCounts(ownLedger.transactions, creditorsLedger.transactions).then((res) => {
             console.log("Mismatch", res);
             setMismatchData(res);
+            if (!res) {
+                setIsPass(true);
+            } else {
+                setIsPass(false);
+            }
+        });
+
+        compareCreditDebitCountsReverse(ownLedger.transactions, creditorsLedger.transactions).then((res) => {
+            console.log("Mismatch", res);
+            setMismatchDataTwo(res);
+            if (!res) {
+                setIsPass(true);
+            } else {
+                setIsPass(false);
+            }
         });
     }, [])
     return (
         <div data-theme="dark" className='flex flex-col pb-20'>
             <div className='flex justify-center flex-col gap-10'>
-                <LedgerStats Data={ownLedger} DataTwo={creditorsLedger} />
-                <LedgerStats Data={creditorsLedger} DataTwo={ownLedger} />
+                <LedgerStats Data={ownLedger} DataTwo={creditorsLedger} isPass={IsPass} />
+                <LedgerStats Data={creditorsLedger} DataTwo={ownLedger} isPass={IsPass} />
 
             </div>
 
             {
                 MismatchData?.length > 0 ? <div className='flex justify-center mb-8 mt-14'>
                     <MissMatchStats Data={MismatchData} ownTransactions={ownLedger.transactions} creditorsTransactions={creditorsLedger.transactions} />
-                </div> : <div className='w-[95%] m-auto mt-10'>
+                </div> : null
+            }
+
+            {
+                MismatchData && MismatchDataTwo ? <div className='w-[40%] h-1 bg-green-500 m-auto rounded-lg shadow-lg animate-pulse'></div> : null
+            }
+
+
+            {
+                MismatchDataTwo?.length > 0 ? <div className='flex justify-center mb-8 mt-14'>
+                    <MissMatchStats Data={MismatchDataTwo} ownTransactions={creditorsLedger.transactions} creditorsTransactions={ownLedger.transactions} />
+                </div> : null
+            }
+
+
+            {
+                !MismatchData && !MismatchDataTwo ? <div className='w-[95%] m-auto mt-10'>
                     <div role="alert" className="alert alert-success">
                         <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         <span>Everything looks fine!</span>
                     </div>
-                </div>
+                </div> : <p>hello</p>
             }
 
 
@@ -39,7 +72,8 @@ export default function Analyzer(props: any) {
 
 const LedgerStats = (props: any) => {
 
-    const { Data, DataTwo } = props;
+    const { Data, DataTwo, isPass: globalPass } = props;
+    console.log("isPass", globalPass)
     let isPass = { result: true, message: "" };
     // check if both the ledgers are same
     if (Data.openingBalance !== DataTwo.openingBalance) {
@@ -60,8 +94,8 @@ const LedgerStats = (props: any) => {
 
         <div className="stat place-items-center">
             <div className="stat-title">{Data.account.accountName}</div>
-            <div className={["stat-value", isPass.result ? "text-green-500" : "text-red-500"].join(" ")}>{
-                isPass.result ? "PASS" : "FAILED"
+            <div className={["stat-value", isPass.result && globalPass ? "text-green-500" : "text-red-500 animate-pulse"].join(" ")}>{
+                isPass.result && globalPass ? "PASS" : "FAILED"
             }
                 <p className='text-sm text-blue-400'>{isPass.message}</p>
             </div>
