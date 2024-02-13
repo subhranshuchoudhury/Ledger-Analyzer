@@ -1,4 +1,3 @@
-'use strict'
 import React, { useState, useRef } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -9,6 +8,8 @@ import { isOwnFile } from '../../../validation/valid';
 import { changeUniFormOwnFile } from '../../../validation/uniform/uni';
 import ledgerRouterSelector from '../../../validation-new/TRAFFIC';
 import Analyzer from '../../components/Analyzer';
+import Select from 'react-dropdown-select'
+import { creditorsList } from '../../../validation-new/creditors-list';
 
 export default function CalculatePage() {
 
@@ -19,6 +20,7 @@ export default function CalculatePage() {
     const [OwnFileData, setOwnFileData] = useState<any>(null);
     const [OtherPartyData, setOtherPartyData] = useState<any>(null);
     const [ToggleAnalyzer, setToggleAnalyzer] = useState(false);
+    const [SelectedCreditorName, setSelectedCreditorName] = useState([])
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -65,7 +67,14 @@ export default function CalculatePage() {
                     setOtherPartyData(null);
                     toast.error("Kindly select Creditors Ledger file")
                 } else {
-                    ledgerRouterSelector("TOPSEL", excelData).then((response: any) => {
+                    const creditorName = SelectedCreditorName[0]?.value;
+                    if (!creditorName) {
+                        toast.error("Choose a creditor first");
+                        otherPartySelectRef.current.value = "";
+                        setOtherPartyData(null);
+                        return;
+                    }
+                    ledgerRouterSelector(creditorName, excelData).then((response: any) => {
                         if (response?.error) {
                             toast.error(response?.error);
                             otherPartySelectRef.current.value = "";
@@ -93,9 +102,7 @@ export default function CalculatePage() {
     }
 
 
-    const startAnalyzingToggle = (choice: boolean) => {
-        setToggleAnalyzer(choice);
-    }
+
 
 
     return (
@@ -121,33 +128,62 @@ export default function CalculatePage() {
 
 
 
-                    <div className='flex justify-evenly mt-20'>
-                        <div>
-                            <p className='text-white uppercase mb-3'>Select Your File <span className='text-red-500'>*</span></p>
-                            <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
-                            {
-                                OwnFileData && <div className='flex justify-center mt-4'>
-                                    <img onClick={() => {
-                                        setOwnFileData(null);
-                                        ownSelectRef.current.value = "";
-
-                                    }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
-                                </div>
-                            }
+                    <div className='flex flex-row justify-evenly mt-20'>
+                        <div >
+                            <p className='text-white uppercase mb-3 mt-3'>Choose Creditor<span className='text-red-500'>*</span></p>
+                            <Select
+                                options={creditorsList}
+                                values={SelectedCreditorName}
+                                onChange={(value) => { setSelectedCreditorName(value); console.log(value); }}
+                                searchable={true}
+                                clearable={false}
+                                placeholder='Select Creditor...'
+                                multi={false}
+                                color='green'
+                                sortBy='label'
+                                disabled={!OtherPartyData ? false : true}
+                                style={{ width: "299px", borderWidth: "2px", borderColor: "green", padding: "10px" }}
+                            />
                         </div>
 
-                        <div>
-                            <p className='text-white uppercase mb-3'>Select Creditor's Ledger File <span className='text-red-500'>*</span></p>
-                            <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
-                            {
-                                OtherPartyData && <div className='flex justify-center mt-4'>
-                                    <img onClick={() => {
-                                        setOtherPartyData(null);
-                                        otherPartySelectRef.current.value = "";
 
-                                    }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
-                                </div>
-                            }
+                        <div className='flex flex-row gap-x-5 flex-wrap'>
+
+                            <div>
+                                {
+                                    SelectedCreditorName.length > 0 && <>
+
+                                        <p className='text-white uppercase mb-3'>Select Creditor' s Ledger File <span className='text-red-500'>*</span></p>
+                                        <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                                        {
+                                            OtherPartyData && <div className='flex justify-center mt-4'>
+                                                <img onClick={() => {
+                                                    setOtherPartyData(null);
+                                                    setSelectedCreditorName([]);
+                                                    otherPartySelectRef.current.value = "";
+
+                                                }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                                            </div>
+                                        }
+                                    </>
+                                }
+                            </div>
+
+                            <div>
+                                <p className='text-white uppercase mb-3'>Select Your File <span className='text-red-500'>*</span></p>
+                                <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
+                                {
+                                    OwnFileData && <div className='flex justify-center mt-4'>
+                                        <img onClick={() => {
+                                            setOwnFileData(null);
+                                            ownSelectRef.current.value = "";
+
+                                        }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                                    </div>
+                                }
+                            </div>
+
+
                         </div>
                     </div>
 
@@ -165,7 +201,7 @@ export default function CalculatePage() {
                                             setOtherPartyData(null);
                                             ownSelectRef.current.value = "";
                                             otherPartySelectRef.current.value = "";
-
+                                            setSelectedCreditorName([]);
                                         }} title='RESET: Resets all the fields' className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/retry.png"} />
                                         {
                                             OwnFileData && OtherPartyData && <Image onClick={() => setToggleAnalyzer(!ToggleAnalyzer)} title='Start Analysis' className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/play.png"} />
@@ -193,7 +229,7 @@ export default function CalculatePage() {
 
 
 
-        </React.Fragment>
+        </React.Fragment >
     )
 }
 
