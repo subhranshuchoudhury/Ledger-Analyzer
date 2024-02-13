@@ -1,12 +1,16 @@
 export const changeUniFormOwnFile = (exceldata: any) => {
 
+
+    const transactions = parseTransaction(exceldata);
+    const totalCreditAndDebit = getTotalCreditAndDebit(transactions);
+
     const uniformData: UniformDataType = {
         account: parsePartyAccount(exceldata[3]),
         openingBalance: parseOpeningBalance(exceldata[4]),
-        transactions: parseTransaction(exceldata),
+        transactions: transactions,
         closingBalance: parseClosingBalance(exceldata[exceldata.length - 1]),
-        totalCredit: parseTotalCredit(exceldata[exceldata.length - 2]),
-        totalDebit: parseTotalDebit(exceldata[exceldata.length - 2])
+        totalCredit: totalCreditAndDebit.totalCredit,
+        totalDebit: totalCreditAndDebit.totalDebit
     }
 
     console.log("UNIFORM DATA: ", uniformData)
@@ -137,6 +141,24 @@ const parseTransaction = (transaction: any) => {
 
 const parseBalance = (balance: string): number => {
     return parseFloat(balance?.["__EMPTY_5"].replace(/[^\d.-]/g, ''));
+}
+
+const getTotalCreditAndDebit = (transactions: Transaction[]): { totalCredit: number, totalDebit: number } => {
+    let totalCredit = 0;
+    let totalDebit = 0;
+    transactions.forEach(transaction => {
+        totalCredit += transaction?.credit || 0;
+        totalDebit += transaction?.debit || 0;
+    });
+
+    console.log("Total Credit and Debit", totalCredit, totalDebit);
+
+    return {
+        totalCredit,
+        totalDebit
+    };
+
+
 }
 
 
