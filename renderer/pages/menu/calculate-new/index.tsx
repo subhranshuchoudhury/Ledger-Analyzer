@@ -1,3 +1,4 @@
+'use strict'
 import React, { useState, useRef } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -7,6 +8,7 @@ import toast from 'react-hot-toast';
 import { isOwnFile } from '../../../validation/valid';
 import { changeUniFormOwnFile } from '../../../validation/uniform/uni';
 import ledgerRouterSelector from '../../../validation-new/TRAFFIC';
+import Analyzer from '../../components/Analyzer';
 
 export default function CalculatePage() {
 
@@ -16,7 +18,8 @@ export default function CalculatePage() {
 
     const [OwnFileData, setOwnFileData] = useState<any>(null);
     const [OtherPartyData, setOtherPartyData] = useState<any>(null);
-    const [ToggleAccordion, setToggleAccordion] = useState(true)
+    const [ToggleAccordion, setToggleAccordion] = useState(true);
+    const [ToggleAnalyzer, setToggleAnalyzer] = useState(false);
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -91,6 +94,11 @@ export default function CalculatePage() {
     }
 
 
+    const startAnalyzingToggle = (choice: boolean) => {
+        setToggleAnalyzer(choice);
+    }
+
+
     return (
         <React.Fragment >
             <Head>
@@ -130,7 +138,7 @@ export default function CalculatePage() {
                         </div>
 
                         <div>
-                            <p className='text-white uppercase mb-3'>Select Other File <span className='text-red-500'>*</span></p>
+                            <p className='text-white uppercase mb-3'>Select Creditor's Ledger File <span className='text-red-500'>*</span></p>
                             <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
                             {
                                 OtherPartyData && <div className='flex justify-center mt-4'>
@@ -149,7 +157,7 @@ export default function CalculatePage() {
                             <div className="collapse collapse-arrow join-item border border-base-300">
                                 <input readOnly checked={true} type="radio" name="my-accordion-1" />
                                 <div className="collapse-title text-xl font-medium">
-                                    Start Calculation Progress 🚀
+                                    Start Analyzing 🚀
                                 </div>
                                 <div className="collapse-content">
                                     <div className='m-5'>
@@ -159,205 +167,22 @@ export default function CalculatePage() {
                                             ownSelectRef.current.value = "";
                                             otherPartySelectRef.current.value = "";
 
-                                        }} className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/retry.png"} />
-                                        <Image className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/play.png"} />
+                                        }} title='RESET: Resets all the fields' className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/retry.png"} />
+                                        {
+                                            OwnFileData && OtherPartyData && <Image onClick={() => setToggleAnalyzer(!ToggleAnalyzer)} title='Start Analysis' className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/play.png"} />
+                                        }
                                     </div>
                                 </div>
                             </div>
-                            {
-                                OwnFileData && <div onClick={() => setToggleAccordion(!ToggleAccordion)} className="collapse collapse-arrow join-item border border-base-300">
-                                    <input checked={ToggleAccordion} readOnly type="radio" name="my-accordion-2" />
-                                    <div className="collapse-title text-xl font-medium capitalize">
-                                        Summary of your file 📜
-                                    </div>
-                                    <div className="collapse-content">
-                                        <table className="table mb-10">
-                                            {/* head */}
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Name</th>
-                                                    <th></th>
-                                                    <th>Value</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {/* row 1 */}
-                                                <tr>
-                                                    <th>1</th>
-                                                    <td>Account</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.account.accountName}</td>
-                                                </tr>
-                                                {/* row 2 */}
-                                                <tr>
-                                                    <th>2</th>
-                                                    <td>Duration</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.account.duration}</td>
-                                                </tr>
-                                                {/* row 3 */}
-                                                <tr>
-                                                    <th>3</th>
-                                                    <td>Start Date</td>
-                                                    <td></td>
-                                                    <td>{new Date(OwnFileData?.account?.startDate).toDateString()}</td>
-                                                </tr>
 
-                                                <tr>
-                                                    <th>4</th>
-                                                    <td>End Date</td>
-                                                    <td></td>
-                                                    <td>{new Date(OwnFileData?.account?.endDate).toDateString()}</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>5</th>
-                                                    <td>Opening Balance</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.openingBalance}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>6</th>
-                                                    <td>Closing Balance</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.closingBalance}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>7</th>
-                                                    <td>Total Credit</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.totalCredit}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>8</th>
-                                                    <td>Total Debit</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.totalDebit}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>9</th>
-                                                    <td>Total Transactions</td>
-                                                    <td></td>
-                                                    <td>{OwnFileData?.transactions.length}</td>
-                                                </tr>
-                                                {
-                                                    OwnFileData?.transactions?.map((transaction: any, index: number) => {
-
-                                                        return (
-                                                            <tr key={index}>
-                                                                <th>{index + 10}</th>
-                                                                <td>{new Date(transaction?.date).toDateString()}</td>
-                                                                <td></td>
-                                                                <td>{transaction?.credit ? "🟢 CREDIT: " + transaction?.credit : "🔴 DEBIT: " + transaction?.debit}</td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            }
-
-                            {
-                                OtherPartyData && <div onClick={() => setToggleAccordion(!ToggleAccordion)} className="collapse collapse-arrow join-item border mb-16 border-base-300">
-                                    <input checked={!ToggleAccordion} readOnly type="radio" name="my-accordion-2" />
-                                    <div className="collapse-title text-xl font-medium">
-                                        Summary of Creditors Ledger file 📜
-                                    </div>
-                                    <div className="collapse-content">
-                                        <table className="table mb-10">
-                                            {/* head */}
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Name</th>
-                                                    <th></th>
-                                                    <th>Value</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {/* row 1 */}
-                                                <tr>
-                                                    <th>1</th>
-                                                    <td>Account</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.account.accountName}</td>
-                                                </tr>
-                                                {/* row 2 */}
-                                                {/* <tr>
-                                                    <th>2</th>
-                                                    <td>Duration</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.account.duration}</td>
-                                                </tr> */}
-                                                {/* row 3 */}
-                                                {/* <tr>
-                                                    <th>3</th>
-                                                    <td>Start Date</td>
-                                                    <td></td>
-                                                    <td>{new Date(OtherPartyData?.account?.startDate).toDateString()}</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>4</th>
-                                                    <td>End Date</td>
-                                                    <td></td>
-                                                    <td>{new Date(OtherPartyData?.account?.endDate).toDateString()}</td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>5</th>
-                                                    <td>Opening Balance</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.openingBalance}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>6</th>
-                                                    <td>Closing Balance</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.closingBalance}</td>
-                                                </tr> */}
-                                                <tr>
-                                                    <th>2</th>
-                                                    <td>Total Credit</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.totalCredit}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>3</th>
-                                                    <td>Total Debit</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.totalDebit}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>4</th>
-                                                    <td>Total Transactions</td>
-                                                    <td></td>
-                                                    <td>{OtherPartyData?.transactions.length}</td>
-                                                </tr>
-                                                {
-                                                    OtherPartyData?.transactions?.map((transaction: any, index: number) => {
-                                                        return (
-                                                            <tr key={index}>
-                                                                <th>{index + 5}</th>
-                                                                <td>{new Date(transaction?.date).toDateString()}</td>
-                                                                <td></td>
-                                                                <td>{transaction.credit ? "🟢 CREDIT: " + transaction.credit : "🔴 DEBIT: " + transaction.debit}</td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            }
 
                         </div>
                     </div>
                 </div>
+
+                {
+                    ToggleAnalyzer && OwnFileData && OtherPartyData && <Analyzer ownLedger={OwnFileData} creditorsLedger={OtherPartyData} />
+                }
 
             </>
 

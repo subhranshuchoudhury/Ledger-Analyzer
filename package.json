@@ -12,6 +12,8 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@table-library/react-table-library": "^4.1.7",
     "daisyui": "^4.5.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",

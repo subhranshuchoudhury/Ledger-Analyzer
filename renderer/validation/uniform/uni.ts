@@ -68,7 +68,7 @@ const parsePartyAccount = (data: Object) => {
         accountName,
         startDate,
         endDate,
-        duration: data["__EMPTY_3"]
+        duration: `${startDate.toDateString()} to ${endDate.toDateString()}`
     }
 }
 
