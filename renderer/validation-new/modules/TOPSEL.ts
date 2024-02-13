@@ -1,5 +1,5 @@
 export const MAIN = (excelData: any) => {
-    console.log("TOPSEL", (excelData));
+    // console.log("TOPSEL", (excelData));
     const OB = getOpeningBalance(excelData);
     const CB = getClosingBalance(excelData);
     const LD = getLedgerDuration(excelData);
@@ -25,7 +25,7 @@ function getOpeningBalance(excelData: any): number {
     const openingBalanceRow = 13;
     const fieldName = "__EMPTY_4";
     const openingBalance = Number(excelData[openingBalanceRow][fieldName]);
-    console.log("Opening Balance", openingBalance);
+    // console.log("Opening Balance", openingBalance);
     return openingBalance;
 }
 
@@ -33,7 +33,7 @@ function getClosingBalance(excelData: any): number {
     const closingBalanceRow = excelData.length - 2;
     const fieldName = "__EMPTY_5";
     const closingBalance = Number(excelData[closingBalanceRow][fieldName]);
-    console.log("Closing Balance", closingBalance);
+    // console.log("Closing Balance", closingBalance);
     return closingBalance;
 }
 
@@ -52,7 +52,7 @@ function getLedgerDuration(excelData: any): { startDate: Date, endDate: Date } {
     const startDate = convertDate(duration[0]);
     const endDate = convertDate(duration[1]);
 
-    console.log("Duration", startDate, endDate);
+    // console.log("Duration", startDate, endDate);
     return { startDate, endDate };
 
 }
@@ -73,7 +73,7 @@ function getTransactionDetails(excelData: any): any[] {
         }
         transactionDetails.push(tempTransaction);
     }
-    console.log("Transaction Details", transactionDetails);
+    // console.log("Transaction Details", transactionDetails);
     return transactionDetails;
 }
 
@@ -85,7 +85,7 @@ function getTotalCreditAndDebit(transactions: any[]): { totalCredit: number, tot
         totalDebit += transaction?.debit || 0;
     });
 
-    console.log("Total Credit and Debit", totalCredit, totalDebit);
+    // console.log("Total Credit and Debit", totalCredit, totalDebit);
 
     return {
         totalCredit,

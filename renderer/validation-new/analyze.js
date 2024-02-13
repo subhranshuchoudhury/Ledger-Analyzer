@@ -40,8 +40,8 @@ const countPositiveCreditOccurrences = (ledger) => {
 
 // Function to compare credit counts from ledgerOne with debit counts from ledgerTwo
 const compareCreditDebitCounts = async (ledgerOne, ledgerTwo) => {
-    console.log("ledgerOne", ledgerOne);
-    console.log("ledgerTwo", ledgerTwo);
+    // console.log("ledgerOne", ledgerOne);
+    // console.log("ledgerTwo", ledgerTwo);
     const debitCountLedgerOne = countPositiveDebitOccurrences(ledgerOne);
     const creditCountLedgerTwo = countPositiveCreditOccurrences(ledgerTwo);
 

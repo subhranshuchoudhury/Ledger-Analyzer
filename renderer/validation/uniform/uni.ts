@@ -151,7 +151,7 @@ const getTotalCreditAndDebit = (transactions: Transaction[]): { totalCredit: num
         totalDebit += transaction?.debit || 0;
     });
 
-    console.log("Total Credit and Debit", totalCredit, totalDebit);
+    // console.log("Total Credit and Debit", totalCredit, totalDebit);
 
     return {
         totalCredit,

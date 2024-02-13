@@ -37,7 +37,7 @@ export const parsePartyAccount = (partyAccountString: Array<any>) => {
             totalCredit: totalCredit,
             totalDebit: totalDebit
         }
-        console.log(uniformData);
+        // console.log(uniformData);
         return uniformData;
     }
 }
@@ -150,7 +150,7 @@ function calculateTotalCredit(transactions: Array<any>): { totalCredit: number, 
         totalDebit += transaction?.debit;
     });
 
-    console.log(totalCredit, totalDebit);
+    // console.log(totalCredit, totalDebit);
 
     return {
         totalCredit,

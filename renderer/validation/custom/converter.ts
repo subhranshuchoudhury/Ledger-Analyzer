@@ -10,7 +10,7 @@ export const stringDateToNumberDate = (dateString: string): Date => {
     var year = parseInt(parts[2], 10);
 
     var convertedDate = new Date(year, month, day);
-    console.log("CONVERTED DATE", convertedDate);
+    // console.log("CONVERTED DATE", convertedDate);
 
     return convertedDate;
 
