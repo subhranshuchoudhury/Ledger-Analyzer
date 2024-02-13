@@ -18,7 +18,6 @@ export default function CalculatePage() {
 
     const [OwnFileData, setOwnFileData] = useState<any>(null);
     const [OtherPartyData, setOtherPartyData] = useState<any>(null);
-    const [ToggleAccordion, setToggleAccordion] = useState(true);
     const [ToggleAnalyzer, setToggleAnalyzer] = useState(false);
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +101,7 @@ export default function CalculatePage() {
     return (
         <React.Fragment >
             <Head>
-                <title>Home / Menu / Calculate - The calculation page.</title>
+                <title>Home/Menu/Analyze - The Analyzing page.</title>
             </Head>
 
             <>
