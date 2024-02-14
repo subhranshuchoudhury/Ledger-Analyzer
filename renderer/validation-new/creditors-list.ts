@@ -4,7 +4,7 @@ export const creditorsList = [
         value: "TOPSEL"
     },
     {
-        label: "DEMO PVT. LTD.",
-        value: "DEMO"
+        label: "RAHUL AUTO AGENCY PVT. LTD.",
+        value: "RAHUL_AUTO_AGENCY"
     }
 ]

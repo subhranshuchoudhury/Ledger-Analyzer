@@ -1,5 +1,5 @@
 export const MAIN = (excelData: any) => {
-    // console.log("TOPSEL", (excelData));
+    console.log("RAHUL_AUTO_AGENCY", (excelData));
     const OB = getOpeningBalance(excelData);
     const CB = getClosingBalance(excelData);
     // const LD = getLedgerDuration(excelData);
@@ -7,7 +7,7 @@ export const MAIN = (excelData: any) => {
     const TCD = getTotalCreditAndDebit(LT);
     return {
         account: {
-            accountName: "TOPSEL MARKETING PVT. LTD.",
+            accountName: "RAHUL AUTO AGENCY PVT. LTD.",
             duration: `${LT[0].date.toDateString()} - ${LT[LT.length - 1].date.toDateString()}`,
             startDate: LT[0].date,
             endDate: LT[LT.length - 1].date,
@@ -20,50 +20,56 @@ export const MAIN = (excelData: any) => {
     };
 };
 
-
 function getOpeningBalance(excelData: any): number {
-    const openingBalanceRow = 13;
+    const openingBalanceRow = 6;
     const fieldName = "__EMPTY_4";
     const openingBalance = Number(excelData[openingBalanceRow][fieldName]);
-    // console.log("Opening Balance", openingBalance);
+    console.log("Opening Balance", openingBalance);
     return openingBalance;
 }
 
 function getClosingBalance(excelData: any): number {
     const closingBalanceRow = excelData.length - 2;
-    const fieldName = "__EMPTY_5";
+    const fieldName = "__EMPTY_4";
     const closingBalance = Number(excelData[closingBalanceRow][fieldName]);
-    // console.log("Closing Balance", closingBalance);
+    console.log("Closing Balance", closingBalance);
     return closingBalance;
 }
 
 function getLedgerDuration(excelData: any): { startDate: Date, endDate: Date } {
 
-    function convertDate(dates: string): Date {
-        let dateParts = dates.split("-");
-        return new Date(`20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+    function convertDate(dateString: string): { startDate: Date, endDate: Date } {
+        // Split the input string into start and end date strings
+        const [startDateStr, endDateStr] = dateString.split(' - ');
 
+        // Convert date strings to JavaScript Date objects
+        const startDate = new Date(startDateStr);
+        const endDate = new Date(endDateStr);
+
+        // Return an object containing start and end dates
+        return { startDate, endDate };
     }
-    const durationRow = 11;
-    const fieldName = "TOPSEL MARKETING PVT. LTD.";
-    const durationUnFiltered = excelData[durationRow][fieldName];
-    const duration = durationUnFiltered.split("to").map((date: string) => date.trim());
 
-    const startDate = convertDate(duration[0]);
-    const endDate = convertDate(duration[1]);
+    const durationRow = 3;
+    const fieldName = "RAHUL AUTO AGENCY PVT. LTD."
+    const durationUnFiltered = excelData[durationRow][fieldName];
+    const duration = convertDate(durationUnFiltered);
+    console.log("Duration", duration);
+    return duration;
+
 
     // console.log("Duration", startDate, endDate);
-    return { startDate, endDate };
+    return convertDate("01-04-2021 - 31-03-2022");
 
 }
 
 function getTransactionDetails(excelData: any): any[] {
     const transactionDetails = [];
-    const transactionStartRow = 14;
-    const transactionEndRow = excelData.length - 4;
-    const creditFieldName = "__EMPTY_5";
-    const debitFieldName = "__EMPTY_4";
-    const dateFieldName = "TOPSEL MARKETING PVT. LTD.";
+    const transactionStartRow = 7;
+    const transactionEndRow = excelData.length - 3;
+    const creditFieldName = "__EMPTY_3";
+    const debitFieldName = "__EMPTY_2";
+    const dateFieldName = "RAHUL AUTO AGENCY PVT. LTD.";
     for (let i = transactionStartRow; i <= transactionEndRow; i++) {
         let tempTransaction = {
             date: excelSerialToJSDate(excelData[i][dateFieldName]),
@@ -73,7 +79,7 @@ function getTransactionDetails(excelData: any): any[] {
         }
         transactionDetails.push(tempTransaction);
     }
-    // console.log("Transaction Details", transactionDetails);
+    console.log("Transaction Details", transactionDetails);
     return transactionDetails;
 }
 
@@ -85,7 +91,7 @@ function getTotalCreditAndDebit(transactions: any[]): { totalCredit: number, tot
         totalDebit += transaction?.debit || 0;
     });
 
-    // console.log("Total Credit and Debit", totalCredit, totalDebit);
+    console.log("Total Credit and Debit", totalCredit, totalDebit);
 
     return {
         totalCredit,

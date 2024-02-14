@@ -24,79 +24,84 @@ export default function CalculatePage() {
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-        const selectedFile = e.target.files?.[0];
-        const handleName = e.target.name;
-        const loading = toast.loading('Please wait while we are processing your file...');
+        try {
+            const selectedFile = e.target.files?.[0];
+            const handleName = e.target.name;
+            const loading = toast.loading('Please wait while we are processing your file...');
 
-        if (!selectedFile) {
-            toast.error('Please select a file to upload');
-            return;
-        }
-        let excelData: any = null;
-        const reader = new FileReader();
-        reader.readAsArrayBuffer(selectedFile);
-        reader.onload = (e: any) => {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: "array" });
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-            excelData = XLSX.utils.sheet_to_json(sheet);
-            console.log(excelData);
-            const isOwnFileCheck = isOwnFile(excelData);
-            toast.dismiss(loading);
-
-
-
-            if (handleName === 'own') {
-                if (!isOwnFileCheck) {
-                    ownSelectRef.current.value = "";
-                    setOwnFileData(null);
-                    toast.error("Kindly select your own file")
-
-                } else {
-
-                    setOwnFileData(changeUniFormOwnFile(excelData));  // uni.ts
-                    toast.success('Your file has been uploaded successfully');
-                }
+            if (!selectedFile) {
+                toast.error('Please select a file to upload');
+                return;
+            }
+            let excelData: any = null;
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(selectedFile);
+            reader.onload = (e: any) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                excelData = XLSX.utils.sheet_to_json(sheet);
+                // console.log(excelData);
+                const isOwnFileCheck = isOwnFile(excelData);
+                toast.dismiss(loading);
 
 
-            } else if (handleName === 'other') {
 
-                if (isOwnFileCheck) {
-                    otherPartySelectRef.current.value = "";
-                    setOtherPartyData(null);
-                    toast.error("Kindly select Creditors Ledger file")
-                } else {
-                    const creditorName = SelectedCreditorName[0]?.value;
-                    if (!creditorName) {
-                        toast.error("Choose a creditor first");
+                if (handleName === 'own') {
+                    if (!isOwnFileCheck) {
+                        ownSelectRef.current.value = "";
+                        setOwnFileData(null);
+                        toast.error("Kindly select your own file")
+
+                    } else {
+
+                        setOwnFileData(changeUniFormOwnFile(excelData));  // uni.ts
+                        toast.success('Your file has been uploaded successfully');
+                    }
+
+
+                } else if (handleName === 'other') {
+
+                    if (isOwnFileCheck) {
                         otherPartySelectRef.current.value = "";
                         setOtherPartyData(null);
-                        return;
-                    }
-                    ledgerRouterSelector(creditorName, excelData).then((response: any) => {
-                        if (response?.error) {
-                            toast.error(response?.error);
+                        toast.error("Kindly select Creditors Ledger file")
+                    } else {
+                        const creditorName = SelectedCreditorName[0]?.value;
+                        if (!creditorName) {
+                            toast.error("Choose a creditor first");
                             otherPartySelectRef.current.value = "";
                             setOtherPartyData(null);
                             return;
-                        } else {
-                            toast.success('Creditors Ledger file has been uploaded successfully');
-                            setOtherPartyData(response);
                         }
-                    }).catch((error: any) => {
-                        toast.error(error.error);
-                        otherPartySelectRef.current.value = "";
-                        setOtherPartyData(null);
-                        return;
-                    });
+                        ledgerRouterSelector(creditorName, excelData).then((response: any) => {
+                            if (response?.error) {
+                                toast.error(response?.error);
+                                otherPartySelectRef.current.value = "";
+                                setOtherPartyData(null);
+                                return;
+                            } else {
+                                toast.success('Creditors Ledger file has been uploaded successfully');
+                                setOtherPartyData(response);
+                            }
+                        }).catch((error: any) => {
+                            toast.error(error.error);
+                            otherPartySelectRef.current.value = "";
+                            setOtherPartyData(null);
+                            return;
+                        });
+                    }
+
+
                 }
 
 
-            }
-
-
-        };
+            };
+        } catch (error) {
+            toast.error('An error occurred while processing the file');
+            console.log(error);
+        }
 
 
     }
@@ -134,7 +139,7 @@ export default function CalculatePage() {
                             <Select
                                 options={creditorsList}
                                 values={SelectedCreditorName}
-                                onChange={(value) => { setSelectedCreditorName(value); console.log(value); }}
+                                onChange={(value) => { setSelectedCreditorName(value) }}
                                 searchable={true}
                                 clearable={false}
                                 placeholder='Select Creditor...'
@@ -200,6 +205,7 @@ export default function CalculatePage() {
                                             setOwnFileData(null);
                                             setOtherPartyData(null);
                                             ownSelectRef.current.value = "";
+                                            setToggleAnalyzer(false);
                                             otherPartySelectRef.current ? otherPartySelectRef.current.value = "" : null;
                                             setSelectedCreditorName([]);
                                         }} title='RESET: Resets all the fields' className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/retry.png"} />
@@ -220,13 +226,6 @@ export default function CalculatePage() {
                 }
 
             </>
-
-
-
-
-
-
-
 
 
         </React.Fragment >

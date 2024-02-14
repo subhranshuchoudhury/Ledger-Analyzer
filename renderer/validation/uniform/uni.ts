@@ -5,7 +5,7 @@ export const changeUniFormOwnFile = (exceldata: any) => {
     const totalCreditAndDebit = getTotalCreditAndDebit(transactions);
 
     const uniformData: UniformDataType = {
-        account: parsePartyAccount(exceldata[3]),
+        account: parsePartyAccount(transactions),
         openingBalance: parseOpeningBalance(exceldata[4]),
         transactions: transactions,
         closingBalance: parseClosingBalance(exceldata[exceldata.length - 1]),
@@ -47,41 +47,18 @@ const parseClosingBalance = (closingBalance: string) => {
 
 }
 
-const parsePartyAccount = (data: Object) => {
+const parsePartyAccount = (data: Transaction[]) => {
     // Extract the account name
     // Extract the account name
-    const accountName = data["JYESHTHA MOTORS"].replace("Account : ", "");
-
-    // Extract the date range
-    const dateRangeMatch = data["__EMPTY_3"].match(/From (\d{1,2})-(\d{1,2})-(\d{4}) to (\d{1,2})-(\d{1,2})-(\d{4})/);
-
-    const startDay = parseInt(dateRangeMatch[1], 10);
-    const startMonth = parseInt(dateRangeMatch[2], 10) - 1; // Subtract 1 as months are 0-indexed
-    const startYear = parseInt(dateRangeMatch[3], 10);
-
-    const endDay = parseInt(dateRangeMatch[4], 10);
-    const endMonth = parseInt(dateRangeMatch[5], 10) - 1; // Subtract 1 as months are 0-indexed
-    const endYear = parseInt(dateRangeMatch[6], 10);
-
-    const startDate = new Date(startYear, startMonth, startDay);
-    const endDate = new Date(endYear, endMonth, endDay);
-
-
+    const accountName = "JYESHTHA MOTORS";
 
     return {
-        accountName,
-        startDate,
-        endDate,
-        duration: `${startDate.toDateString()} to ${endDate.toDateString()}`
+        accountName: accountName,
+        startDate: data[0].date,
+        endDate: data[data.length - 1].date,
+        duration: `${data[0].date.toDateString()} - ${data[data.length - 1].date.toDateString()}`
+
     }
-}
-
-const parseTotalCredit = (totalAmount: object): number => {
-    return parseFloat(totalAmount?.["__EMPTY_4"]);
-}
-
-const parseTotalDebit = (totalAmount: string): number => {
-    return parseFloat(totalAmount?.["__EMPTY_3"]);
 }
 
 const parseTransaction = (transaction: any) => {
@@ -139,9 +116,7 @@ const parseTransaction = (transaction: any) => {
     return transactions;
 }
 
-const parseBalance = (balance: string): number => {
-    return parseFloat(balance?.["__EMPTY_5"].replace(/[^\d.-]/g, ''));
-}
+
 
 const getTotalCreditAndDebit = (transactions: Transaction[]): { totalCredit: number, totalDebit: number } => {
     let totalCredit = 0;
