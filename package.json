@@ -1,8 +1,8 @@
 {
   "private": true,
   "name": "jyeshtha-motors",
-  "description": "Bill calculation application for Jyestha Motors",
-  "version": "1.0.0",
+  "description": "Ledger bill calculation application for Jyestha Motors",
+  "version": "2.0.0",
   "author": "Jyeshtha Motors <subhranshuchoudhury00@gmail.com>",
   "main": "app/background.js",
   "scripts": {
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
-    "@table-library/react-table-library": "^4.1.7",
     "daisyui": "^4.5.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",

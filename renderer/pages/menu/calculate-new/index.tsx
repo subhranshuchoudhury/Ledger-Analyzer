@@ -200,7 +200,7 @@ export default function CalculatePage() {
                                             setOwnFileData(null);
                                             setOtherPartyData(null);
                                             ownSelectRef.current.value = "";
-                                            otherPartySelectRef.current.value = "";
+                                            otherPartySelectRef.current ? otherPartySelectRef.current.value = "" : null;
                                             setSelectedCreditorName([]);
                                         }} title='RESET: Resets all the fields' className='hover:cursor-pointer hover:glass rounded-xl' width={50} height={50} alt='start' src={"/images/retry.png"} />
                                         {

@@ -40,7 +40,7 @@ export default function Analyzer(props: any) {
 
             {
                 MismatchData?.length > 0 ? <div className='flex justify-center mb-8 mt-14'>
-                    <MissMatchStats Data={MismatchData} ownTransactions={ownLedger?.transactions} creditorsTransactions={creditorsLedger?.transactions} />
+                    <MissMatchStats isReverse={false} Data={MismatchData} ownTransactions={ownLedger?.transactions} creditorsTransactions={creditorsLedger?.transactions} />
                 </div> : null
             }
 
@@ -51,7 +51,7 @@ export default function Analyzer(props: any) {
 
             {
                 MismatchDataTwo?.length > 0 ? <div className='flex justify-center mb-8 mt-14'>
-                    <MissMatchStats Data={MismatchDataTwo} ownTransactions={creditorsLedger?.transactions} creditorsTransactions={ownLedger?.transactions} />
+                    <MissMatchStats isReverse={true} Data={MismatchDataTwo} ownTransactions={creditorsLedger?.transactions} creditorsTransactions={ownLedger?.transactions} />
                 </div> : null
             }
 
@@ -145,7 +145,7 @@ const LedgerStats = (props: any) => {
 }
 
 const MissMatchStats = (props: any) => {
-    const { Data, ownTransactions, creditorsTransactions } = props;
+    const { Data, ownTransactions, creditorsTransactions, isReverse } = props;
     return <ul data-theme="dark" className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
 
         {
@@ -183,26 +183,62 @@ const MissMatchStats = (props: any) => {
                                 </thead>
                                 <tbody>
                                     {/* rows */}
+                                    {/* I don't know why the index that are returning from analyze.js is reversed. */}
+                                    {/* But This solution works */}
                                     {
-                                        item?.indexes?.ledgerOne?.length > 0 && item?.indexes?.ledgerOne?.map((idx: number, index: number) => {
-                                            return <tr key={index}>
-                                                <th>{index + 1} (OWN)</th>
-                                                <td>{ownTransactions[idx].date.toDateString()}</td>
-                                                <td>{ownTransactions[idx].credit}</td>
-                                                <td>{ownTransactions[idx].debit}</td>
-                                            </tr>
-                                        })
-                                    }
+                                        !isReverse ? <>
+                                            {
+                                                item?.indexes?.ledgerOne?.length > 0 && item?.indexes?.ledgerOne?.map((idx: number, index: number) => {
+                                                    console.log("YO's", idx);
+                                                    console.log("YO's", ownTransactions);
+                                                    return <tr key={index}>
+                                                        <th>{index + 1} (Your's file) </th>
+                                                        <td>{ownTransactions[idx]?.date.toDateString()}</td>
+                                                        <td>{ownTransactions[idx]?.credit}</td>
+                                                        <td>{ownTransactions[idx]?.debit}</td>
+                                                    </tr>
+                                                })
+                                            }
 
-                                    {
-                                        item?.indexes?.ledgerTwo?.length > 0 && item?.indexes?.ledgerTwo?.map((idx: number, index: number) => {
-                                            return <tr key={index}>
-                                                <th>{index + 1} (CREDITOR'S)</th>
-                                                <td>{creditorsTransactions[idx].date.toDateString()}</td>
-                                                <td>{creditorsTransactions[idx].credit}</td>
-                                                <td>{creditorsTransactions[idx].debit}</td>
-                                            </tr>
-                                        })
+                                            {
+                                                item?.indexes?.ledgerTwo?.length > 0 && item?.indexes?.ledgerTwo?.map((idx: number, index: number) => {
+                                                    console.log("Creditor's", idx);
+                                                    console.log("Creditor's", creditorsTransactions);
+                                                    return <tr key={index}>
+                                                        <th>{index + 1} (Creditor's file) </th>
+                                                        <td>{creditorsTransactions[idx]?.date.toDateString()}</td>
+                                                        <td>{creditorsTransactions[idx]?.credit}</td>
+                                                        <td>{creditorsTransactions[idx]?.debit}</td>
+                                                    </tr>
+                                                })
+                                            }
+                                        </> : <>
+                                            {
+                                                item?.indexes?.ledgerOne?.length > 0 && item?.indexes?.ledgerOne?.map((idx: number, index: number) => {
+                                                    console.log("YO's", idx);
+                                                    console.log("YO's", ownTransactions);
+                                                    return <tr key={index}>
+                                                        <th>{index + 1} Your's file(R)</th>
+                                                        <td>{creditorsTransactions[idx]?.date.toDateString()}</td>
+                                                        <td>{creditorsTransactions[idx]?.credit}</td>
+                                                        <td>{creditorsTransactions[idx]?.debit}</td>
+                                                    </tr>
+                                                })
+                                            }
+
+                                            {
+                                                item?.indexes?.ledgerTwo?.length > 0 && item?.indexes?.ledgerTwo?.map((idx: number, index: number) => {
+                                                    console.log("Creditor's", idx);
+                                                    console.log("Creditor's", creditorsTransactions);
+                                                    return <tr key={index}>
+                                                        <th>{index + 1} Creditor's file(R)</th>
+                                                        <td>{ownTransactions[idx]?.date.toDateString()}</td>
+                                                        <td>{ownTransactions[idx]?.credit}</td>
+                                                        <td>{ownTransactions[idx]?.debit}</td>
+                                                    </tr>
+                                                })
+                                            }
+                                        </>
                                     }
 
 
