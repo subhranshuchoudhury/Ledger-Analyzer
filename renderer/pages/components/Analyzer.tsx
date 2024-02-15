@@ -6,12 +6,12 @@ export default function Analyzer(props: any) {
     const [MismatchData, setMismatchData] = useState([])
     const [MismatchDataTwo, setMismatchDataTwo] = useState([])
     const [IsPass, setIsPass] = useState(false)
-    const [forceStop, setForceStop] = useState(false)
+    // const [forceStop, setForceStop] = useState(false)
     const [isValidDetails, setIsValidDetails] = useState({ result: true, message: "", forceStop: false })
 
-    const handleForceStop = (choice: boolean) => {
-        setForceStop(choice);
-    }
+    // const handleForceStop = (choice: boolean) => {
+    //     setForceStop(choice);
+    // }
 
     // console.log("Analyzer", ownLedger, creditorsLedger, toggleViewer);
 
@@ -192,8 +192,8 @@ const MissMatchStats = (props: any) => {
                                         !isReverse ? <>
                                             {
                                                 item?.indexes?.ledgerOne?.length > 0 && item?.indexes?.ledgerOne?.map((idx: number, index: number) => {
-                                                    console.log("YO's", idx);
-                                                    console.log("YO's", ownTransactions);
+                                                    // console.log("YO's", idx);
+                                                    // console.log("YO's", ownTransactions);
                                                     return <tr key={index}>
                                                         <th>{index + 1} (Your's file) </th>
                                                         <td>{ownTransactions[idx]?.date.toDateString()}</td>
@@ -205,8 +205,8 @@ const MissMatchStats = (props: any) => {
 
                                             {
                                                 item?.indexes?.ledgerTwo?.length > 0 && item?.indexes?.ledgerTwo?.map((idx: number, index: number) => {
-                                                    console.log("Creditor's", idx);
-                                                    console.log("Creditor's", creditorsTransactions);
+                                                    // console.log("Creditor's", idx);
+                                                    // console.log("Creditor's", creditorsTransactions);
                                                     return <tr key={index}>
                                                         <th>{index + 1} (Creditor's file) </th>
                                                         <td>{creditorsTransactions[idx]?.date.toDateString()}</td>
@@ -218,8 +218,8 @@ const MissMatchStats = (props: any) => {
                                         </> : <>
                                             {
                                                 item?.indexes?.ledgerOne?.length > 0 && item?.indexes?.ledgerOne?.map((idx: number, index: number) => {
-                                                    console.log("YO's", idx);
-                                                    console.log("YO's", ownTransactions);
+                                                    // console.log("YO's", idx);
+                                                    // console.log("YO's", ownTransactions);
                                                     return <tr key={index}>
                                                         <th>{index + 1} Your's file(R)</th>
                                                         <td>{creditorsTransactions[idx]?.date.toDateString()}</td>
@@ -231,8 +231,8 @@ const MissMatchStats = (props: any) => {
 
                                             {
                                                 item?.indexes?.ledgerTwo?.length > 0 && item?.indexes?.ledgerTwo?.map((idx: number, index: number) => {
-                                                    console.log("Creditor's", idx);
-                                                    console.log("Creditor's", creditorsTransactions);
+                                                    // console.log("Creditor's", idx);
+                                                    // console.log("Creditor's", creditorsTransactions);
                                                     return <tr key={index}>
                                                         <th>{index + 1} Creditor's file(R)</th>
                                                         <td>{ownTransactions[idx]?.date.toDateString()}</td>
