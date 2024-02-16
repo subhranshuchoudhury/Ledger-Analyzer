@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { compareCreditDebitCounts, compareCreditDebitCountsReverse } from '../../validation-new/analyze'
+import { missMatchEnhance } from '../../validation-new/utils/missMatchEnhance';
+import { generateReport } from '../../validation-new/utils/generateReport';
 export default function Analyzer(props: any) {
     const { ownLedger, creditorsLedger, toggleViewer } = props;
 
@@ -23,7 +25,9 @@ export default function Analyzer(props: any) {
 
             compareCreditDebitCounts(ownLedger?.transactions, creditorsLedger?.transactions).then((res) => {
                 // console.log("Mismatch", res);
-                setMismatchData(res);
+                const finalResult = missMatchEnhance(res);
+                // generateReport(finalResult, [], ownLedger, creditorsLedger);
+                setMismatchData(finalResult);
                 if (!res) {
                     setIsPass(true);
                 } else {
@@ -33,7 +37,10 @@ export default function Analyzer(props: any) {
 
             compareCreditDebitCountsReverse(ownLedger?.transactions, creditorsLedger?.transactions).then((res) => {
                 // console.log("Mismatch", res);
-                setMismatchDataTwo(res);
+                const finalResult = missMatchEnhance(res);
+                // generateReport([], finalResult, ownLedger, creditorsLedger);
+
+                setMismatchDataTwo(finalResult);
                 if (!res) {
                     setIsPass(true);
                 } else {
@@ -49,6 +56,15 @@ export default function Analyzer(props: any) {
                 <LedgerStats isValid={isValidDetails} isOwn={false} Data={creditorsLedger} DataTwo={ownLedger} isPass={IsPass} />
 
             </div>
+
+            {
+                MismatchDataTwo?.length > 0 || MismatchData?.length > 0 ? <div>
+                    <div className='flex justify-between items-center bg-gray-700 p-4 rounded-md m-10'>
+                        <p>DOWNLOAD REPORT</p>
+                        <button onClick={() => generateReport(MismatchData, MismatchDataTwo, ownLedger, creditorsLedger)} className='btn btn-primary'>Download</button>
+                    </div>
+                </div> : null
+            }
 
             {
                 MismatchData?.length > 0 ? <div className='flex justify-center mb-8 mt-14'>
@@ -126,7 +142,7 @@ const LedgerStats = (props: any) => {
 
         <div className="stat place-items-center">
             <div className="stat-title">{isOwn ? "Bills" : "Payments"}</div>
-            <div className="stat-value text-blue-600">{Data?.totalCredit?.toLocaleString('en-IN', {
+            <div className="stat-value text-blue-600">{Data?.[isOwn ? "totalCredit" : "totalDebit"]?.toLocaleString('en-IN', {
                 maximumFractionDigits: 2,
                 style: 'currency',
                 currency: 'INR'
@@ -136,7 +152,7 @@ const LedgerStats = (props: any) => {
 
         <div className="stat place-items-center">
             <div className="stat-title">{isOwn ? "Payments" : "Bills"}</div>
-            <div className="stat-value text-blue-600">{Data?.totalDebit?.toLocaleString('en-IN', {
+            <div className="stat-value text-blue-600">{Data?.[isOwn ? "totalDebit" : "totalCredit"]?.toLocaleString('en-IN', {
                 maximumFractionDigits: 2,
                 style: 'currency',
                 currency: 'INR'
@@ -149,6 +165,7 @@ const LedgerStats = (props: any) => {
 
 const MissMatchStats = (props: any) => {
     const { Data, ownTransactions, creditorsTransactions, isReverse } = props;
+    console.log("MISSMATCH", isReverse, Data)
     return <ul data-theme="dark" className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
 
         {
@@ -182,6 +199,7 @@ const MissMatchStats = (props: any) => {
                                         <th>Date</th>
                                         <th>Credit</th>
                                         <th>Debit</th>
+                                        <th>Type</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -199,6 +217,7 @@ const MissMatchStats = (props: any) => {
                                                         <td>{ownTransactions[idx]?.date.toDateString()}</td>
                                                         <td>{ownTransactions[idx]?.credit}</td>
                                                         <td>{ownTransactions[idx]?.debit}</td>
+                                                        <td>{ownTransactions[idx]?.type}</td>
                                                     </tr>
                                                 })
                                             }
@@ -212,6 +231,7 @@ const MissMatchStats = (props: any) => {
                                                         <td>{creditorsTransactions[idx]?.date.toDateString()}</td>
                                                         <td>{creditorsTransactions[idx]?.credit}</td>
                                                         <td>{creditorsTransactions[idx]?.debit}</td>
+                                                        <td>{creditorsTransactions[idx]?.type}</td>
                                                     </tr>
                                                 })
                                             }
@@ -225,6 +245,7 @@ const MissMatchStats = (props: any) => {
                                                         <td>{creditorsTransactions[idx]?.date.toDateString()}</td>
                                                         <td>{creditorsTransactions[idx]?.credit}</td>
                                                         <td>{creditorsTransactions[idx]?.debit}</td>
+                                                        <td>{creditorsTransactions[idx]?.type}</td>
                                                     </tr>
                                                 })
                                             }
@@ -238,6 +259,7 @@ const MissMatchStats = (props: any) => {
                                                         <td>{ownTransactions[idx]?.date.toDateString()}</td>
                                                         <td>{ownTransactions[idx]?.credit}</td>
                                                         <td>{ownTransactions[idx]?.debit}</td>
+                                                        <td>{ownTransactions[idx]?.type}</td>
                                                     </tr>
                                                 })
                                             }

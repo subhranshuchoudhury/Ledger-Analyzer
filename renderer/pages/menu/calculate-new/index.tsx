@@ -120,7 +120,7 @@ export default function CalculatePage() {
                 <div data-theme="dark">
                     <div className="navbar mt-2">
 
-                        <div className="flex-1">
+                        <div className="flex-1 mt-2">
                             <div onClick={() => router.back()} className='hover:cursor-pointer'>
                                 <Image width={40} height={40} alt="back button" src="/images/back.png" />
                             </div>

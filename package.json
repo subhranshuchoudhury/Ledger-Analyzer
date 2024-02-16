@@ -2,7 +2,7 @@
   "private": true,
   "name": "jyeshtha-motors",
   "description": "Ledger bill calculation application for Jyestha Motors",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Jyeshtha Motors <subhranshuchoudhury00@gmail.com>",
   "main": "app/background.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "daisyui": "^4.5.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
+    "json-as-xlsx": "^2.5.6",
     "prop-types": "^15.8.1",
     "react-dropdown-select": "^4.11.1",
     "react-hot-toast": "^2.4.1",

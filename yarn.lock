@@ -1050,6 +1050,11 @@
     ajv "^6.12.0"
     ajv-keywords "^3.4.1"
 
+"@e965/xlsx@^0.20.0":
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/@e965/xlsx/-/xlsx-0.20.1.tgz#7336393702d18a9f6f5a37c3384612daf4927b8f"
+  integrity sha512-zRv8NLB1H6aqQyZt3/gLjd0xkZsH+/WIRi4YHAw1koESNTPPmzXJbPqO2HMN7DZB1vnF1USKxQ9ZvS0S9Lqmbg==
+
 "@electron/asar@^3.2.1":
   version "3.2.8"
   resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.2.8.tgz#2ea722f3452583dbd4ffdcc4b4f5dc903f1d8178"
@@ -3233,6 +3238,13 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
+
+json-as-xlsx@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/json-as-xlsx/-/json-as-xlsx-2.5.6.tgz#c8f9fd1c374ba4762a8c524d079276dbf17e7d34"
+  integrity sha512-z7phlB+VgS9wZv2N4SBKlguC3C7uauSj2PYSZICCrPaiu1lu8zkCpzZ4sOHWi0/3Je0CJl87q+J+3mpZbxpOew==
+  dependencies:
+    "@e965/xlsx" "^0.20.0"
 
 json-buffer@3.0.1:
   version "3.0.1"
