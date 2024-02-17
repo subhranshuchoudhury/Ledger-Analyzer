@@ -60,8 +60,8 @@ export default function Analyzer(props: any) {
             {
                 MismatchDataTwo?.length > 0 || MismatchData?.length > 0 ? <div>
                     <div className='flex justify-between items-center bg-gray-700 p-4 rounded-md m-10'>
-                        <p>DOWNLOAD REPORT</p>
-                        <button onClick={() => generateReport(MismatchData, MismatchDataTwo, ownLedger, creditorsLedger)} className='btn btn-primary'>Download</button>
+                        <p className='font-mono'>DOWNLOAD REPORT</p>
+                        <button onClick={() => generateReport(MismatchData, MismatchDataTwo, ownLedger, creditorsLedger)} className='btn btn-primary animate-pulse'>Download</button>
                     </div>
                 </div> : null
             }

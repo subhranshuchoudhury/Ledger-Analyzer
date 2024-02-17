@@ -4,8 +4,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as XLSX from "xlsx";
 import toast from 'react-hot-toast';
-import { isOwnFile } from '../../../validation/valid';
-import { changeUniFormOwnFile } from '../../../validation/uniform/uni';
+import { isOwnFile } from '../../../validation/own/valid';
+import { changeUniFormOwnFile } from '../../../validation/own/uni';
 import ledgerRouterSelector from '../../../validation-new/TRAFFIC';
 import Analyzer from '../../components/Analyzer';
 import Select from 'react-dropdown-select'

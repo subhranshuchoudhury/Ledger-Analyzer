@@ -3,7 +3,7 @@ const ledgerRouterSelector = async (name: string, data: any) => {
         const module = await import(`./modules/${name}`);
         return module.MAIN(data);
     } catch (error) {
-        console.error("Error in ledgerRouterSelector", error);
+        console.error("This ledger file is not supported or not found.", error);
         return { error: "Error in ledger router selector" };
     }
 }
