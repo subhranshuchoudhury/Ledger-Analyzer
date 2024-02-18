@@ -70,41 +70,28 @@ export const excelDownload = (ledgerReportAccount: UniformDataType, report: Repo
 
     let content = [];
 
-    report.forEach(((r, index) => {
-        let tempContent = {
-            sl: index + 1,
-            source: r.accountName,
-            date: r.date.toDateString(),
-            bills: r.isPayment ? "" : r.amount,
-            payments: r.isPayment ? r.amount : ""
+    content[0] = { "COL1": "SL No.", "COL2": "Source", "COL3": "Date", "COL4": "Bills", "COL5": "Payments" };
+
+    report.forEach((obj, index) => {
+        content[index + 1] = {
+            "COL1": index + 1,
+            "COL2": obj.accountName,
+            "COL3": obj.date.toDateString(),
+            "COL4": obj.isPayment ? "" : obj.amount,
+            "COL5": obj.isPayment ? obj.amount : ""
         }
-
-        content.push(tempContent)
-    }))
-
-    content[0].duration = ledgerReportAccount.account.duration;
-    content[0].ledger = ledgerReportAccount.account.accountName;
-    content[0].reportDate = new Date().toDateString();
-
-    console.log("Content", content);
-
-
-
+    });
 
 
     let data = [
         {
             sheet: "Sheet1",
             columns: [
-                { label: "SL No.", value: "sl" },
-                { label: "Source", value: "source" },
-                { label: "Date", value: "date" },
-                { label: "Bills", value: "bills" },
-                { label: "Payments", value: "payments" },
-                { label: "Duration", value: "duration" },
-                { label: "Creditor's Name", value: "ledger" },
-                { label: "Report Date", value: "reportDate" },
-
+                { label: ledgerReportAccount.account.duration, value: "COL1" },
+                { label: ledgerReportAccount.account.accountName, value: "COL2" },
+                { label: new Date().toDateString(), value: "COL3" },
+                { label: "⠀", value: "COL4" }, // blank space needed ( dangerous character )
+                { label: "⠀⠀", value: "COL5" },
             ],
             content
         },
@@ -114,7 +101,7 @@ export const excelDownload = (ledgerReportAccount: UniformDataType, report: Repo
 
 
     let settings = {
-        fileName: `${ledgerReportAccount.account.accountName}_LEDGER_MATCH_REPORT_${ledgerReportAccount.account.duration}`, // Name of the resulting spreadsheet
+        fileName: `${ledgerReportAccount.account.accountName}_LEDGER_MATCH_REPORT_${ledgerReportAccount.account.duration}_${new Date().getTime()}`, // Name of the resulting spreadsheet
         extraLength: 3, // A bigger number means that columns will be wider
         writeMode: "writeFile", // The available parameters are 'WriteFile' and 'write'. This setting is optional. Useful in such cases https://docs.sheetjs.com/docs/solutions/output#example-remote-file
         writeOptions: {}, // Style options from https://docs.sheetjs.com/docs/api/write-options
