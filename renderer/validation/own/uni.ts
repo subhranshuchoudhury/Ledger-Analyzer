@@ -76,7 +76,7 @@ const parseTransaction = (transaction: any) => {
         };
 
 
-        if (transaction[index].__EMPTY === "Pymt") {
+        if (transaction[index].__EMPTY === "Pymt" || transaction[index].__EMPTY === "DrNt" || transaction[index].__EMPTY === "PrRt") {
 
             tempTransaction = {
                 date: excelSerialToJSDate(transaction[index]?.["JYESHTHA MOTORS"]),

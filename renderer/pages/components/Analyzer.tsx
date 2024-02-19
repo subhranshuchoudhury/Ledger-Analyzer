@@ -140,25 +140,54 @@ const LedgerStats = (props: any) => {
             <div className="stat-desc text-secondary">↗︎ Transfers ({Data?.transactions.length})</div>
         </div>
 
-        <div className="stat place-items-center">
-            <div className="stat-title">{isOwn ? "Bills" : "Payments"}</div>
-            <div className="stat-value text-blue-600">{Data?.[isOwn ? "totalCredit" : "totalDebit"]?.toLocaleString('en-IN', {
-                maximumFractionDigits: 2,
-                style: 'currency',
-                currency: 'INR'
-            })}</div>
-            <div className="stat-desc text-blue-600">↗︎ ({totalCreditTransactions})</div>
-        </div>
+        {
+            isOwn && <>
+                <div className="stat place-items-center">
+                    <div className="stat-title">Payments</div>
+                    <div className="stat-value text-blue-600">{Data?.totalDebit?.toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR'
+                    })}</div>
+                    <div className="stat-desc text-blue-600">↗︎ ({totalDebitTransactions})</div>
+                </div>
 
-        <div className="stat place-items-center">
-            <div className="stat-title">{isOwn ? "Payments" : "Bills"}</div>
-            <div className="stat-value text-blue-600">{Data?.[isOwn ? "totalDebit" : "totalCredit"]?.toLocaleString('en-IN', {
-                maximumFractionDigits: 2,
-                style: 'currency',
-                currency: 'INR'
-            })}</div>
-            <div className="stat-desc text-blue-600">↗︎ ({totalDebitTransactions})</div>
-        </div>
+                <div className="stat place-items-center">
+                    <div className="stat-title">Bills</div>
+                    <div className="stat-value text-blue-600">{Data?.totalCredit?.toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR'
+                    })}</div>
+                    <div className="stat-desc text-blue-600">↗︎ ({totalCreditTransactions})</div>
+                </div>
+            </>
+        }
+
+        {
+            !isOwn && <>
+                <div className="stat place-items-center">
+                    <div className="stat-title">Payments</div>
+                    <div className="stat-value text-blue-600">{Data?.totalCredit?.toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR'
+                    })}</div>
+                    <div className="stat-desc text-blue-600">↗︎ ({totalCreditTransactions})</div>
+                </div>
+
+                <div className="stat place-items-center">
+                    <div className="stat-title">Bills</div>
+                    <div className="stat-value text-blue-600">{Data?.totalDebit?.toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR'
+                    })}</div>
+                    <div className="stat-desc text-blue-600">↗︎ ({totalDebitTransactions})</div>
+                </div>
+            </>
+        }
+
 
     </div>
 }
