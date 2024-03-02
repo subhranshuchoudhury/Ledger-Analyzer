@@ -10,6 +10,7 @@ import ledgerRouterSelector from '../../../validation-new/TRAFFIC';
 import Analyzer from '../../components/Analyzer';
 import Select from 'react-dropdown-select'
 import { creditorsList } from '../../../validation-new/creditors-list';
+import { fileAcceptType, handleAcceptType } from '../../../validation-new/fileAcceptType';
 
 export default function CalculatePage() {
 
@@ -20,7 +21,11 @@ export default function CalculatePage() {
     const [OwnFileData, setOwnFileData] = useState<any>(null);
     const [OtherPartyData, setOtherPartyData] = useState<any>(null);
     const [ToggleAnalyzer, setToggleAnalyzer] = useState(false);
-    const [SelectedCreditorName, setSelectedCreditorName] = useState([])
+    const [SelectedCreditorName, setSelectedCreditorName] = useState<{
+        label: string;
+        value: string;
+        type: string;
+    }[]>([]);
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -106,6 +111,19 @@ export default function CalculatePage() {
 
     }
 
+    const handlePDFInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("Hello World")
+        console.log(e.target.files);
+    }
+
+    const handleExecutionFunction = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0];
+        const handleName = e.target.name;
+        console.log(selectedFile);
+        console.log(handleName);
+        const remoteFunction = new Function("handlePDFInput")(e);
+    }
+
 
 
 
@@ -139,7 +157,10 @@ export default function CalculatePage() {
                             <Select
                                 options={creditorsList}
                                 values={SelectedCreditorName}
-                                onChange={(value) => { setSelectedCreditorName(value) }}
+                                onChange={(value) => {
+                                    setSelectedCreditorName(value)
+                                    console.log(value)
+                                }}
                                 searchable={true}
                                 clearable={false}
                                 placeholder='Select Creditor...'
@@ -159,7 +180,8 @@ export default function CalculatePage() {
                                     SelectedCreditorName.length > 0 && <>
 
                                         <p className='text-white uppercase mb-3'>Select Creditor' s Ledger File <span className='text-red-500'>*</span></p>
-                                        <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+
+                                        <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept={(handleAcceptType(SelectedCreditorName[0].type).accept)} type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
                                         {
                                             OtherPartyData && <div className='flex justify-center mt-4'>
                                                 <img onClick={() => {
