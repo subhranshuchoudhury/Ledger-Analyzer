@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -11,8 +11,12 @@ import Analyzer from '../../components/Analyzer';
 import Select from 'react-dropdown-select'
 import { creditorsList } from '../../../validation-new/creditors-list';
 import { fileAcceptType, handleAcceptType } from '../../../validation-new/fileAcceptType';
+import { getOnlineModules } from '../../../validation-new/utils/fetch-online-modules';
 
 export default function CalculatePage() {
+
+
+
 
     const router = useRouter();
     const ownSelectRef = useRef(null);
@@ -26,6 +30,11 @@ export default function CalculatePage() {
         value: string;
         type: string;
     }[]>([]);
+
+    useEffect(() => {
+        getOnlineModules().then((response: any) => { })
+    }, [])
+
 
     const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 

@@ -4,7 +4,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "validation-new/analyze.js"
+    "validation-new/analyze.js",
+    "validation-new/utils/fetch-online-modules.js"
   ],
   "exclude": [
     "node_modules"
