@@ -1,4 +1,4 @@
-export const creditorsList = [
+export const creditorsList: CreditorsList[] = [
     {
         label: "TOPSEL MARKETING PVT. LTD.",
         value: "TOPSEL",
@@ -23,5 +23,22 @@ export const creditorsList = [
         label: "SUNDARAM MOTORS",
         value: "SUNDARAM_MOTORS",
         type: "PDF"
+    },
+    {
+        label: "DOLPHIN MOTOR AGENCY",
+        value: "DOLPHIN_MOTOR_AGENCY",
+        type: "XLSX"
+    },
+    {
+        label: "PN DISTRIBUTORS",
+        value: "PN_DISTRIBUTORS",
+        type: "XLSX"
     }
+
 ]
+
+type CreditorsList = {
+    label: string,
+    value: string,
+    type: string
+}

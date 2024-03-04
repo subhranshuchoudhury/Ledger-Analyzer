@@ -41,7 +41,7 @@ export const generateReport = (dataOne: MismatchSchema[], dataTwoReversed: Misma
 
         obj.indexes.ledgerOne.forEach((index) => {
             let report: Report = {
-                accountName: transactionsCreditorsLedger.account.accountName,
+                accountName: isPayment ? transactionsCreditorsLedger.account.accountName : transactionsOwnLedger.account.accountName,
                 amount: obj.amount,
                 date: transactionsOwnLedger.transactions[index].date,
                 isPayment: isPayment
@@ -51,7 +51,7 @@ export const generateReport = (dataOne: MismatchSchema[], dataTwoReversed: Misma
 
         obj.indexes.ledgerTwo.forEach((index) => {
             let report: Report = {
-                accountName: transactionsOwnLedger.account.accountName,
+                accountName: isPayment ? transactionsCreditorsLedger.account.accountName : transactionsOwnLedger.account.accountName,
                 amount: obj.amount,
                 date: transactionsCreditorsLedger.transactions[index].date,
                 isPayment: isPayment

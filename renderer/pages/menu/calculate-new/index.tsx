@@ -113,15 +113,17 @@ export default function CalculatePage() {
 
     const handlePDFInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Hello World")
-        console.log(e.target.files);
+        console.log("PDF INPUT");
     }
 
     const handleExecutionFunction = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files?.[0];
-        const handleName = e.target.name;
-        console.log(selectedFile);
-        console.log(handleName);
-        const remoteFunction = new Function("handlePDFInput")(e);
+
+        if (SelectedCreditorName[0].type === "XLSX") {
+            handleFileInput(e);
+        } else {
+            handlePDFInput(e);
+        }
+
     }
 
 
@@ -181,7 +183,7 @@ export default function CalculatePage() {
 
                                         <p className='text-white uppercase mb-3'>Select Creditor' s Ledger File <span className='text-red-500'>*</span></p>
 
-                                        <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleFileInput} accept={(handleAcceptType(SelectedCreditorName[0].type).accept)} type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                                        <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleExecutionFunction} accept={(handleAcceptType(SelectedCreditorName[0].type).accept)} type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
                                         {
                                             OtherPartyData && <div className='flex justify-center mt-4'>
                                                 <img onClick={() => {
