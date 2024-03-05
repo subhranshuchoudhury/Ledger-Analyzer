@@ -43,4 +43,15 @@ export class SimpleIDB {
             throw `Error getting data: ${error}`;
         }
     }
+
+    async remove(key) {
+        try {
+            await this.openDatabase();
+            const store = this.getObjectStore('readwrite');
+            await store.delete(key);
+            return `Data with key ${key} removed successfully.`;
+        } catch (error) {
+            throw `Error removing data: ${error}`;
+        }
+    }
 }

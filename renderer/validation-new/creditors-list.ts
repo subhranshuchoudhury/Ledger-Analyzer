@@ -33,6 +33,11 @@ export const creditorsList: CreditorsList[] = [
         label: "PN DISTRIBUTORS",
         value: "PN_DISTRIBUTORS",
         type: "XLSX"
+    },
+    {
+        label: "ZDeveloper",
+        value: "ZDeveloper",
+        type: "XLSX"
     }
 
 ]
