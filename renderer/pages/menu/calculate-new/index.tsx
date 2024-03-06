@@ -12,19 +12,19 @@ import Select from 'react-dropdown-select'
 import { creditorsList } from '../../../validation-new/creditors-list';
 import { fileAcceptType, handleAcceptType } from '../../../validation-new/fileAcceptType';
 import { getOnlineModules } from '../../../validation-new/utils/fetch-online-modules';
+import { SimpleIDB } from '../../../validation-new/utils/SimpleIDB';
+const dbName = 'onlineModulesDB';
+const storeName = 'onlineModules';
+const idb = new SimpleIDB(dbName, storeName);
 
 export default function CalculatePage() {
-
-
-
-
     const router = useRouter();
     const ownSelectRef = useRef(null);
     const otherPartySelectRef = useRef(null);
-
     const [OwnFileData, setOwnFileData] = useState<any>(null);
     const [OtherPartyData, setOtherPartyData] = useState<any>(null);
     const [ToggleAnalyzer, setToggleAnalyzer] = useState(false);
+    const [IsLoading, setIsLoading] = useState(true)
     const [SelectedCreditorName, setSelectedCreditorName] = useState<{
         label: string;
         value: string;
@@ -120,10 +120,55 @@ export default function CalculatePage() {
 
     }
 
-    const handlePDFInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePDFInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Hello World")
         console.log("PDF INPUT");
+
+        const file = event.target.files[0];
+
+        if (file) {
+            try {
+                const base64Data = await readFileAsBase64(file);
+
+                const response = await fetch('/api/uploadPdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ file: base64Data }),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result);
+                } else {
+                    console.error('Failed to upload PDF');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+
+
     }
+
+    const readFileAsBase64 = async (file) => {
+        return new Promise((resolve, reject) => {
+            const reader: any = new FileReader();
+
+            reader.onload = () => {
+                resolve(reader.result.split(',')[1]);
+            };
+
+            reader.onerror = (error) => {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    };
 
     const handleExecutionFunction = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -134,6 +179,37 @@ export default function CalculatePage() {
         }
 
     }
+
+
+    useEffect(() => {
+
+        getModulesFromIDB()
+
+
+    }, [])
+
+    const getModulesFromIDB = async () => {
+        try {
+
+            const modules = await idb.get("ONLINE_MODULES");
+            if (modules) {
+                console.log("Modules from IDB", modules)
+                const parsedModules = JSON.parse(modules);
+                // item names
+                const itemNames = parsedModules.items.map((item: any) => item.name);
+                console.log("Item Names", itemNames)
+                setIsLoading(false)
+            } else {
+                toast.error("No modules found in IDB. Please check your internet connection and try again.")
+                setIsLoading(false)
+            }
+        } catch (error) {
+            toast.error("An error occurred while fetching modules from IDB. Please check your internet connection and try again.")
+            setIsLoading(false)
+
+        }
+    }
+
 
 
 
@@ -160,70 +236,78 @@ export default function CalculatePage() {
                     </div>
 
 
+                    <div className='text-center mt-6'>
+
+                        {
+                            IsLoading ? <span className="loading loading-dots loading-lg"></span> : <div className='flex flex-row justify-evenly mt-20'>
+                                <div >
+                                    <p className='text-white uppercase mb-3 mt-3'>Choose Creditor<span className='text-red-500'>*</span></p>
+                                    <Select
+                                        options={creditorsList}
+                                        values={SelectedCreditorName}
+                                        onChange={(value) => {
+                                            setSelectedCreditorName(value)
+                                            console.log(value)
+                                        }}
+                                        searchable={true}
+                                        clearable={false}
+                                        placeholder='Select Creditor...'
+                                        multi={false}
+                                        color='green'
+                                        sortBy='label'
+                                        disabled={!OtherPartyData ? false : true}
+                                        style={{ width: "299px", borderWidth: "2px", borderColor: "green", padding: "10px" }}
+                                    />
+                                </div>
 
 
-                    <div className='flex flex-row justify-evenly mt-20'>
-                        <div >
-                            <p className='text-white uppercase mb-3 mt-3'>Choose Creditor<span className='text-red-500'>*</span></p>
-                            <Select
-                                options={creditorsList}
-                                values={SelectedCreditorName}
-                                onChange={(value) => {
-                                    setSelectedCreditorName(value)
-                                    console.log(value)
-                                }}
-                                searchable={true}
-                                clearable={false}
-                                placeholder='Select Creditor...'
-                                multi={false}
-                                color='green'
-                                sortBy='label'
-                                disabled={!OtherPartyData ? false : true}
-                                style={{ width: "299px", borderWidth: "2px", borderColor: "green", padding: "10px" }}
-                            />
-                        </div>
+                                <div className='flex flex-row gap-x-5 flex-wrap'>
 
-
-                        <div className='flex flex-row gap-x-5 flex-wrap'>
-
-                            <div>
-                                {
-                                    SelectedCreditorName.length > 0 && <>
-
-                                        <p className='text-white uppercase mb-3'>Select Creditor' s Ledger File <span className='text-red-500'>*</span></p>
-
-                                        <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleExecutionFunction} accept={(handleAcceptType(SelectedCreditorName[0].type).accept)} type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                                    <div>
                                         {
-                                            OtherPartyData && <div className='flex justify-center mt-4'>
+                                            SelectedCreditorName.length > 0 && <>
+
+                                                <p className='text-white uppercase mb-3'>Select Creditor' s Ledger File <span className='text-red-500'>*</span></p>
+
+                                                <input ref={otherPartySelectRef} name='other' id='otherdata' onChange={handleExecutionFunction} accept={(handleAcceptType(SelectedCreditorName[0].type).accept)} type="file" title='Creditors Ledger Excel File' className="file-input file-input-bordered file-input-success w-full max-w-xs" />
+                                                {
+                                                    OtherPartyData && <div className='flex justify-center mt-4'>
+                                                        <img onClick={() => {
+                                                            setOtherPartyData(null);
+                                                            setSelectedCreditorName([]);
+                                                            otherPartySelectRef.current.value = "";
+
+                                                        }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
+                                                    </div>
+                                                }
+                                            </>
+                                        }
+                                    </div>
+
+                                    <div>
+                                        <p className='text-white uppercase mb-3'>Select Your File <span className='text-red-500'>*</span></p>
+                                        <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
+                                        {
+                                            OwnFileData && <div className='flex justify-center mt-4'>
                                                 <img onClick={() => {
-                                                    setOtherPartyData(null);
-                                                    setSelectedCreditorName([]);
-                                                    otherPartySelectRef.current.value = "";
+                                                    setOwnFileData(null);
+                                                    ownSelectRef.current.value = "";
 
                                                 }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
                                             </div>
                                         }
-                                    </>
-                                }
-                            </div>
-
-                            <div>
-                                <p className='text-white uppercase mb-3'>Select Your File <span className='text-red-500'>*</span></p>
-                                <input ref={ownSelectRef} name='own' id='owndata' onChange={handleFileInput} accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' type="file" title='Your Excel File' className="file-input file-input-bordered file-input-warning w-full max-w-xs" />
-                                {
-                                    OwnFileData && <div className='flex justify-center mt-4'>
-                                        <img onClick={() => {
-                                            setOwnFileData(null);
-                                            ownSelectRef.current.value = "";
-
-                                        }} className='animate-pulse shadow-2xl hover:cursor-pointer' width={50} height={50} src={"/images/file selected.png"} alt='file selected icon' />
                                     </div>
-                                }
+
+
+                                </div>
                             </div>
-
-
-                        </div>
+                        }
                     </div>
+
+
+
+
+
 
                     <div className='flex justify-center mt-16 p-5'>
                         <div className="join join-vertical w-full">
