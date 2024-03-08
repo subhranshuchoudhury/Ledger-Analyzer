@@ -1,9 +1,10 @@
 export const MAIN = (excelData: any) => {
     console.log("RAHUL_AUTO_AGENCY", (excelData));
+    const closingBalanceIndex = getClosingBalanceIndex(excelData);
     const OB = getOpeningBalance(excelData);
-    const CB = getClosingBalance(excelData);
+    const CB = getClosingBalance(excelData, closingBalanceIndex);
     // const LD = getLedgerDuration(excelData);
-    const LT = getTransactionDetails(excelData);
+    const LT = getTransactionDetails(excelData, closingBalanceIndex);
     const TCD = getTotalCreditAndDebit(LT);
     return {
         account: {
@@ -28,11 +29,11 @@ function getOpeningBalance(excelData: any): number {
     return openingBalance;
 }
 
-function getClosingBalance(excelData: any): number {
-    const closingBalanceRow = excelData.length - 2;
+function getClosingBalance(excelData: any, closingBalanceIndex: number): number {
+    const closingBalanceRow = closingBalanceIndex;
     const fieldName = "__EMPTY_4";
     const closingBalance = Number(excelData[closingBalanceRow][fieldName]);
-    console.log("Closing Balance", closingBalance);
+    console.log("--> Closing Balance", closingBalance);
     return closingBalance;
 }
 
@@ -63,10 +64,10 @@ function getLedgerDuration(excelData: any): { startDate: Date, endDate: Date } {
 
 }
 
-function getTransactionDetails(excelData: any): any[] {
+function getTransactionDetails(excelData: any, closingBalanceIndex: number): any[] {
     const transactionDetails = [];
     const transactionStartRow = 7;
-    const transactionEndRow = excelData.length - 3;
+    const transactionEndRow = closingBalanceIndex - 1;
     const creditFieldName = "__EMPTY_3";
     const debitFieldName = "__EMPTY_2";
     const dateFieldName = "RAHUL AUTO AGENCY PVT. LTD.";
@@ -114,6 +115,17 @@ function excelSerialToJSDate(serial: number): Date {
     const resultDate = new Date(excelStartDate.getTime() + totalMilliseconds);
 
     return resultDate;
+}
+
+function getClosingBalanceIndex(excelData: any) { // may not work for others
+    let closingBalanceIndex = 0;
+    for (let i = 0; i < excelData.length; i++) {
+        if (excelData[i].__EMPTY_1 === "Closing Balance") {
+            closingBalanceIndex = i;
+            break;
+        }
+    }
+    return closingBalanceIndex;
 }
 
 
