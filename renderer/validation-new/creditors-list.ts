@@ -45,6 +45,11 @@ export const creditorsList: CreditorsList[] = [
         type: "XLSX"
     },
     {
+        label: "RASHMI MOTORS",
+        value: "RASHMI_MOTORS",
+        type: "XLSX"
+    },
+    {
         label: "ZDeveloper",
         value: "ZDeveloper",
         type: "XLSX"
