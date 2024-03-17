@@ -2,7 +2,7 @@
   "private": true,
   "name": "jyeshtha-motors",
   "description": "Ledger bill calculation application for Jyestha Motors",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "author": "Jyeshtha Motors <subhranshuchoudhury00@gmail.com>",
   "main": "app/background.js",
   "scripts": {
