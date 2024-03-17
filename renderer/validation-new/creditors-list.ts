@@ -40,10 +40,16 @@ export const creditorsList: CreditorsList[] = [
         type: "XLSX"
     },
     {
+        label: "SM LUBES",
+        value: "SM_LUBES",
+        type: "XLSX"
+    },
+    {
         label: "ZDeveloper",
         value: "ZDeveloper",
         type: "XLSX"
-    }
+    },
+
 
 ]
 
